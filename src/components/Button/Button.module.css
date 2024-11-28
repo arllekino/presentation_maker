@@ -1,0 +1,147 @@
+.text {
+    font-family: 'Montserrat', 'Tajawal', sans-serif;
+    color: #303030;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.defaultButton {
+    border-width: 0;
+    direction: inherit;
+    background-color: inherit;
+}
+
+.defaultButton:hover {
+    cursor: pointer;
+}
+
+.addSlideButton {
+    border: none;
+    width: 170px;
+    block-size: 30px;
+    padding-inline: 10px;
+    border: 1px solid #CCCCCC;
+    border-radius: 7px;
+    border-color: #CCCCCC;
+    border-width: 1px;
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.addSlideButton .text {
+    font-family: 'Montserrat', 'Tajawal', sans-serif;
+    color: #3F4250;
+    font-weight: 540;
+}
+
+.actionLog {
+    margin-inline-start: 20px;
+}
+
+.addItem {
+    margin-inline: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.addTextBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.addImageBlock {
+    height: 44px;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+}
+
+.deleteBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.setBackgroundImage {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.setColorSlide {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.defaultIcon {
+    inline-size: 25px;
+    block-size: 25px;
+}
+
+.iconAddSlide {
+    margin-bottom: 1px;
+    inline-size: 12px;
+    block-size: 12px;
+}
+
+.iconDeleteSlide {
+    inline-size: 30px;
+    block-size: 30px;
+}
+
+.iconDeleteBlock {
+    inline-size: 25px;
+    block-size: 25px;
+}
+
+.iconSettings {
+    inline-size: 30px;
+    block-size: 30px;
+}
+
+.iconSetBackgroundImage {
+    inline-size: 30px;
+    block-size: 30px;
+}
+
+.inputColor {
+    position: absolute;
+    visibility: hidden;
+}
+
+.labelButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.labelButton:hover {
+    cursor: pointer;
+}
+
+/* .iconAddImageBlock */
+
+.iconSetColorSlide {
+    border: 1px solid #E2E2E3;
+    min-inline-size: 20px;
+    max-inline-size: 20px;
+    block-size: 20px;
+    border-radius: 50%;
+    margin-inline: 4px;
+}
+
+.inputFile {
+    display: none;
+}
+
+.addItem .text {
+    font-weight: 500;
+}

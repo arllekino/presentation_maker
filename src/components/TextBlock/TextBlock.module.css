@@ -1,0 +1,5 @@
+.textBlock {
+    margin: 0;
+    cursor: grab;
+    user-select: none;
+}

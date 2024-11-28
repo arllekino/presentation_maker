@@ -1,0 +1,35 @@
+.topBar {
+    background-color: #FCFCFD;
+    padding: 10px 15px 10px 15px;
+    display: flex;
+}
+
+.title {
+    block-size: 20px;
+    padding: 5px;
+    color: #303030;
+    background-color: azure;
+    border: 0;
+    outline: 1px solid #CCCCCC;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'Montserrat', 'Tajawal', sans-serif;
+    font-weight: 600;
+}
+
+.title::placeholder {
+    font-weight: 300;
+}
+
+.title:active, :hover, :focus {
+    outline-offset: 0;
+}
+
+.title:focus {
+    outline: 2px solid #3b82fa;
+}
+
+.utils {
+    display: flex;
+    align-items: center;
+}

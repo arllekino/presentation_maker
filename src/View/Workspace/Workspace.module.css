@@ -1,0 +1,22 @@
+.workspace {
+	width: 100%;
+	display: flex;
+	block-size: calc(100vh - 50px);
+}
+
+.leftBar {
+	min-inline-size: 190px;
+	margin-block-end: 10px;
+	background-color: #FCFCFD;
+	display: flex;
+	flex-direction: column;
+}
+
+.buttons {
+	padding-inline: 5px;
+	padding-bottom: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}

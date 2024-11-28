@@ -1,0 +1,106 @@
+.toolBar {
+    inline-size: 400px;
+    margin-block: 0px 40px;
+    margin-inline-end: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ECECED;
+    border-radius: 10px;
+    box-shadow: 0 0 5px 5px #F7F7F8;
+}
+
+.toolTitle {
+    font-family: 'Montserrat', 'Tajawal', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #2A2C37;
+}
+
+.toolTitleArea {
+    padding-block: 12px 16px;
+    padding-inline-start: 10px;
+    border-bottom: 1px solid #ECECED;
+}
+/* 
+.toolMain {
+    padding: 10px;
+} */
+
+.toolSubtitle {
+    font-family: 'Montserrat', 'Tajawal', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 21px;
+    color: #3F4250;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.toolUtilsArea {
+    padding: 16px;
+    border-bottom: 1px solid #ECECED;
+    display: grid;
+    gap: 10px;
+}
+
+.toolTextArea {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 21px;
+    color: #3F4250;
+    border-bottom: 1px solid #ECECED;
+
+}
+
+.toolButton {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #E6E6E7;
+    padding: 4px 12px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+}
+
+.iconChevron {
+    width: 15px;
+    height: 15px;
+    margin-bottom: 5px;
+}
+
+.toolFrontBack {
+    display: flex;
+    justify-content: space-around;
+}
+
+.toolFrontBackButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.iconToFront {
+    width: 24px;
+    height: 100%;
+}
+
+.iconToBack {
+    width: 24px;
+    height: 100%;
+}
+
+.iconLock {
+    width: 24px;
+    margin-bottom: 4px;
+}
+
+.iconLock:hover {
+    cursor: pointer;
+}
+
+.iconTextAreaChevron {
+    margin-bottom: 7px;
+}

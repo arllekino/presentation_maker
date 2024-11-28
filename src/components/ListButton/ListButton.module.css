@@ -1,0 +1,59 @@
+/* .listButton {
+} */
+
+.menu {
+    position: absolute;
+    inline-size: 125px;
+    padding: 5px;
+    z-index: 1000;
+
+    background-color: #FFFFFF;
+    box-shadow: 0 0 5px 5px #F1F1F2;
+    border-radius: 5px;
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    transition: 0.3s;
+}
+
+.menu.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.list {
+    margin: 0;
+    padding: 5px;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.item {
+    display: flex;
+    gap: 10px;
+    font-family: 'Montserrat', 'Tajawal', sans-serif;
+    color: #747474;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.item:hover {
+    cursor: pointer;
+}
+
+.iconFlag {
+    inline-size: 25px;
+    block-size: 25px;
+}
+
+.deleteSlideIcon {
+    inline-size: 25px;
+    block-size: 25px;
+}
+
+.menuSlide {
+    position: absolute;
+}

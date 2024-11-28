@@ -1,0 +1,7 @@
+.imageBlock {
+    position: absolute;
+    margin: 0;
+    background-size: 100% 100%;
+    cursor: grab;
+    user-select: none;
+}
