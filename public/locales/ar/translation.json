@@ -22,5 +22,7 @@
     "textAlignment": "محاذاة النص",
     "opacity": "التعتيم",
     "shadow": "الظل",
-    "sizeAndPosition": "المنصب & الحجم"
+    "sizeAndPosition": "المنصب & الحجم",
+    "image": "الصورة",
+    "replaceMedia": "استبدال الوسائط"
 }

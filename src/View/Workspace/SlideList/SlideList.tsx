@@ -1,32 +1,33 @@
 import styles from './SlideList.module.css'
 import { useTranslation } from 'react-i18next'
 import Slide from '../../../components/Slide/Slide'
-import { SlideType } from '../../../Types/SlideType'
 import { DefaultSlideSetting } from '../../../Utils/DefaultSlideSettings'
-import { dispatch, getEditor } from '../../../Store/Editor'
-import { deleteSlide, selectSlide } from '../../../Functions/modificationFunctions'
 import React, { useRef, useState } from 'react'
 import useDraggableVertical from '../../../Store/Hooks/useDragAndDropVertical'
 import ListButton, { ListItem } from '../../../components/ListButton/ListButton'
 import listButtonStyles from '../../../components/ListButton/ListButton.module.css'
+import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
+import { useAppActions } from '../../../Store/Hooks/useAppActions'
 
-type SlideListProps = {
-	orderedSlideIds: string[],
-	listSlides: Map<string, SlideType>,
-	currentSlideId: string | null
-}
-
-function SlideList({ orderedSlideIds, listSlides, currentSlideId }: SlideListProps) {
+function SlideList() {
 	const { t, i18n, } = useTranslation()
+
+	const { deleteSlide, selectSlide } = useAppActions()
 
 	const slideList = useRef<HTMLDivElement>(null)
 	const [slideIdMenuOpen, setSlideIdMenuOpen] = useState('')
 
+	
+	const editor = useAppSelector((state => state))
+	const orderedSlideIds = editor.presentation.orderedSlideIds
+	const currentSlideId = editor.selectedSlideId
 	const handleMouseDown = useDraggableVertical(orderedSlideIds, slideList)
+
+	const listSlides = editor.presentation.listSlides
 
 	const deleteItem: ListItem = {
 		text: t('deleteSlide'),
-		action: () => dispatch(deleteSlide, { editor: getEditor() }),
+		action: deleteSlide,
 		icon: {
 			path: 'src/Assets/icon_trash.svg',
 			className: listButtonStyles.deleteSlideIcon
@@ -41,10 +42,6 @@ function SlideList({ orderedSlideIds, listSlides, currentSlideId }: SlideListPro
 				{orderedSlideIds.map((slideId, index) => {
 					const slide = listSlides.get(slideId);
 
-					const makeSlideCurrent = () => {
-						dispatch(selectSlide, { slideId })
-					}
-
 					const onRightMouseClick = (event: React.MouseEvent<HTMLDivElement>) => {
 						event.preventDefault()
 						setSlideIdMenuOpen(slideId)
@@ -58,7 +55,7 @@ function SlideList({ orderedSlideIds, listSlides, currentSlideId }: SlideListPro
 						<React.Fragment key={slideId}>
 							<div
 								className={styles.previewSlide}
-								onClick={makeSlideCurrent}
+								onClick={() => selectSlide(slideId)}
 								onMouseDown={handleMouseDown}
 								onContextMenu={onRightMouseClick}
 							>

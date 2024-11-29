@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { TextSlideObject } from '../../Types/SlideObjectTypes'
 import { dispatch } from '../../Store/Editor'
 import styles from './TextBlock.module.css'
-import { changeTextBlockContent } from '../../Functions/modificationFunctions'
+import { changeTextBlockContent } from '../../Store/Functions/modificationFunctions'
 import { useState } from 'react'
 
 type TextBlockProps = {

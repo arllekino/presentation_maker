@@ -3,6 +3,7 @@ import ToolSlide from '../ToolsView/ToolSlide'
 import { getEditor } from '../../../Store/Editor'
 import { ImageSlideObject, TextSlideObject } from '../../../Types/SlideObjectTypes'
 import ToolTextBlock from '../ToolsView/ToolTextBlock'
+import ToolImageBlock from '../ToolsView/ToolImageBlock'
 
 type ToolsProps = {
     selectedSlideId?: string
@@ -45,6 +46,7 @@ function Tools({ selectedSlideId }: ToolsProps) {
 
             return (
                 <div className={styles.toolBar}>
+                    <ToolImageBlock/>
                 </div>
             )
 

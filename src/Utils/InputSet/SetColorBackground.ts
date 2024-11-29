@@ -1,4 +1,4 @@
-import { setBackgroundColorSlide } from "../../Functions/modificationFunctions"
+import { setBackgroundColorSlide } from "../../Store/Functions/modificationFunctions"
 import { dispatch } from "../../Store/Editor"
 
 function getColorBackgroundSetter(id: string | null): (event: React.ChangeEvent<HTMLInputElement>) => void {

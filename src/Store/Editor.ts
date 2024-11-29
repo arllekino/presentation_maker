@@ -1,7 +1,7 @@
-import { createEditor, getDocument, saveDocument } from '../Functions/modificationFunctions'
+import { getDocument, saveDocument } from './Functions/modificationFunctions'
 import { EditorType } from '../Types/EditorType'
 
-let _editor: EditorType = getDocument() || createEditor()
+let _editor: EditorType = getDocument()
 console.log(_editor);
 
 let _handler: (() => void) | null = null

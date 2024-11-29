@@ -6,8 +6,7 @@ import Tools from './Tools/Tools'
 import Button from '../../components/Button/Button'
 import { useTranslation } from 'react-i18next'
 import { EditorType } from '../../Types/EditorType'
-import { dispatch } from '../../Store/Editor'
-import { createSlide } from '../../Functions/modificationFunctions'
+import { useAppActions } from '../../Store/Hooks/useAppActions'
 
 type WorkspaceProps = {
     editor: EditorType
@@ -15,6 +14,8 @@ type WorkspaceProps = {
 
 function Workspace({ editor }: WorkspaceProps) {
     const { t } = useTranslation()
+
+    const { createSlide } = useAppActions()
 
     const slide = editor.selectedSlideId == null ? undefined : editor.presentation.listSlides.get(editor.selectedSlideId)
 
@@ -24,7 +25,7 @@ function Workspace({ editor }: WorkspaceProps) {
                 <div className={styles.buttons}>
                     <Button
                         className={buttonStyles.addSlideButton}
-                        action={() => dispatch(createSlide)}
+                        action={createSlide}
                         text={t('newSlide')}
                         icon={{
                             path: '/src/assets/icon_add_slide.svg',

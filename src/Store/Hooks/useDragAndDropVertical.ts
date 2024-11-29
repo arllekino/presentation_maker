@@ -1,5 +1,5 @@
 import React, { RefObject } from 'react'
-import { changeSlidePosition } from '../../Functions/modificationFunctions'
+import { changeSlidePosition } from '../Functions/modificationFunctions'
 import { dispatch } from '../Editor'
 
 type ElementProperties = {

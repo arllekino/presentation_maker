@@ -4,7 +4,7 @@ import { DefaultSlideSetting } from '../../Utils/DefaultSlideSettings'
 import { SlideType } from '../../Types/SlideType'
 import { useTranslation } from 'react-i18next'
 import { dispatch, getEditor } from '../../Store/Editor'
-import { createSlide } from '../../Functions/modificationFunctions'
+import { createSlide } from '../../Store/Functions/modificationFunctions'
 import ObjectWrapper from '../ObjectWrapper/ObjectWrapper'
 
 type SlideProps = {

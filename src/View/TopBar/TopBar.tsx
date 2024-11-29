@@ -5,7 +5,7 @@ import styles from './TopBar.module.css'
 import buttonStyles from '../../components/Button/Button.module.css'
 import ListButton from '../../components/ListButton/ListButton'
 import listButtonStyles from '../../components/ListButton/ListButton.module.css'
-import { createTextBlock, deleteBlocksFromSlide, renamePresentation, saveDocumentToFile } from '../../Functions/modificationFunctions'
+import { createTextBlock, deleteBlocksFromSlide, renamePresentation, saveDocumentToFile } from '../../Store/Functions/modificationFunctions'
 import { dispatch } from '../../Store/Editor'
 import ButtonInput from '../../components/Button/ButtonInput'
 import useLanguageItems from '../../Utils/ListItems/LanguageItems'
@@ -15,8 +15,6 @@ import useLoadFromFileEditor from '../../Utils/LoadFromFIleEditor'
 
 function TopBar() {
     const { t, i18n } = useTranslation()
-
-    // const someAction = () => { }
 
     const [isOpen, setIsOpen] = useState(false)
     const toggleMenu = () => setIsOpen(!isOpen)

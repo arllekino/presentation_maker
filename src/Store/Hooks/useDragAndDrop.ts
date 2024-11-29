@@ -1,6 +1,6 @@
 import { RefObject } from 'react'
 import { dispatch } from '../Editor'
-import { changeBlockPosition, unsetSelectedSlideObject } from '../../Functions/modificationFunctions'
+import { changeBlockPosition, unsetSelectedSlideObject } from '../Functions/modificationFunctions'
 
 function useDragAndDrop(
     block: RefObject<HTMLParagraphElement | HTMLDivElement>,
@@ -26,13 +26,13 @@ function useDragAndDrop(
 
             dispatch(changeBlockPosition, { newX, newY })
         }
+
         window.removeEventListener('mousemove', handleMouseMove)
         window.removeEventListener('mouseup', handleMouseUp)
     })
 
     const handleMouseDown = ((e: React.MouseEvent<HTMLParagraphElement | HTMLDivElement>) => {
         if (block.current) {
-
             const currentBlock = block.current
             const parentElement = currentBlock.parentElement!
 

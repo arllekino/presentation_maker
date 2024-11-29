@@ -1,6 +1,6 @@
 import { RefObject } from "react"
 import { dispatch } from "../Editor"
-import { changeBlockPosition, resizeBlock } from "../../Functions/modificationFunctions"
+import { changeBlockPosition, resizeBlock } from "../Functions/modificationFunctions"
 
 enum PointType {
     topLeft,
@@ -31,8 +31,8 @@ type PointProps = {
 function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: PointProps) {
     let size: Size = { width: 0, height: 0 }
     let position: Position = { x: 0, y: 0 }
-    let startPos: Position = { x: 0, y: 0 }
-    let startSize: Size = {width: 0, height: 0}
+    const startPos: Position = { x: 0, y: 0 }
+    const startSize: Size = {width: 0, height: 0}
 
     const handleMouseDown = () => {
         if (block.current && block.current.parentElement) {
@@ -44,8 +44,8 @@ function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: Po
             startSize.width = blockProps.width
             startSize.height = blockProps.height
 
-            window.addEventListener("mousemove", handleMouseMove)
-            window.addEventListener("mouseup", handleMouseUp)
+            window.addEventListener('mousemove', handleMouseMove)
+            window.addEventListener('mouseup', handleMouseUp)
         }
     }
 
@@ -54,10 +54,14 @@ function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: Po
             const newProps = onResize(block, point, { x: event.clientX, y: event.clientY }, startPos, startSize)
 
             if (newProps) {
-                block.current.style.marginLeft = `${newProps.position.x}px`
-                block.current.style.marginTop = `${newProps.position.y}px`
-                block.current.style.width = `${newProps.size.width}px`
-                block.current.style.height = `${newProps.size.height}px`
+                if (newProps.position.x < newProps.position.x + newProps.size.width
+                    && newProps.position.y < newProps.position.y + newProps.size.height
+                ) {
+                    block.current.style.marginLeft = `${newProps.position.x}px`
+                    block.current.style.marginTop = `${newProps.position.y}px`
+                    block.current.style.width = `${newProps.size.width}px`
+                    block.current.style.height = `${newProps.size.height}px`
+                }
 
                 size = newProps.size
                 position = newProps.position
@@ -69,8 +73,8 @@ function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: Po
         dispatch(changeBlockPosition, { newX: position.x, newY: position.y })
         dispatch(resizeBlock, { newWidth: size.width, newHeight: size.height })
 
-        window.removeEventListener("mousemove", handleMouseMove)
-        window.removeEventListener("mouseup", handleMouseUp)
+        window.removeEventListener('mousemove', handleMouseMove)
+        window.removeEventListener('mouseup', handleMouseUp)
     }
 
     if (isFixed) {
@@ -80,7 +84,6 @@ function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: Po
     return handleMouseDown
 }
 
-
 function onResize(block: RefObject<HTMLDivElement>, point: PointProps, mousePos: Position, startPos: Position, startSize: Size): { position: Position, size: Size } | undefined {
     if (!block.current || !block.current.parentElement) {
         return undefined
@@ -89,11 +92,11 @@ function onResize(block: RefObject<HTMLDivElement>, point: PointProps, mousePos:
     const blockProps = block.current.getBoundingClientRect()
     const parentProps = block.current.parentElement?.getBoundingClientRect()
 
-    let position: Position = {
+    const position: Position = {
         x: startPos.x,
         y: startPos.y
     }
-    let size: Size = {
+    const size: Size = {
         width: blockProps.width,
         height: blockProps.height
     }

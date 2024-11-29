@@ -1,10 +1,10 @@
 import { v4 as uuid } from 'uuid'
-import { PresentationType } from '../Types/PresentationType'
-import { SlideType } from '../Types/SlideType'
-import { ImageSlideObject, TextSlideObject } from '../Types/SlideObjectTypes'
-import { EditorType } from '../Types/EditorType'
-import isEditorValid from '../Utils/Validation/ValidateEditor'
-import { DefaultSlideSetting } from '../Utils/DefaultSlideSettings'
+import { PresentationType } from '../../Types/PresentationType'
+import { SlideType } from '../../Types/SlideType'
+import { ImageSlideObject, TextSlideObject } from '../../Types/SlideObjectTypes'
+import { EditorType } from '../../Types/EditorType'
+import isEditorValid from '../../Utils/Validation/ValidateEditor'
+import { DefaultSlideSetting } from '../../Utils/DefaultSlideSettings'
 
 function createEditor(): EditorType {
     const presentation = createPresentation()
@@ -43,7 +43,7 @@ function createPresentation(): PresentationType {
 
 function createSlide(editor: EditorType): EditorType {
     const defaultBackgroundColor = '#FFFFFF'
-
+    
     const newSlide: SlideType = {
         id: uuid(),
         background: {
@@ -58,6 +58,7 @@ function createSlide(editor: EditorType): EditorType {
     newPresentation.listSlides.set(newSlide.id, newSlide)
     newPresentation.orderedSlideIds.push(newSlide.id)
 
+    
     return {
         ...editor,
         presentation: newPresentation,
@@ -65,13 +66,7 @@ function createSlide(editor: EditorType): EditorType {
     }
 }
 
-function deleteSlide(editor: EditorType): EditorType {
-    const slideId = editor.selectedSlideId
-
-    if (slideId == null) {
-        return editor
-    }
-
+function deleteSlide(editor: EditorType, {slideId}: {slideId: string}): EditorType {
     const modPresentation = { ...editor.presentation }
     const currentSlideIndex = modPresentation.orderedSlideIds.indexOf(slideId)
 
@@ -100,7 +95,7 @@ function selectSlide(editor: EditorType, { slideId }: { slideId: string }): Edit
     return newEditor
 }
 
-function renamePresentation(editor: EditorType, newTitle: string): EditorType {
+function renamePresentation(editor: EditorType, {newTitle}: {newTitle: string}): EditorType {
     const newPresentation = { ...editor.presentation }
 
     newPresentation.title = newTitle
@@ -269,7 +264,6 @@ function raiseOverlayPriority(editor: EditorType, { slideObject }: { slideObject
 }
 
 function lowerOverlayPriority(editor: EditorType, { slideObject }: { slideObject: ImageSlideObject | TextSlideObject }): EditorType {
-
     if (editor.selectedSlideId == null) {
         return editor
     }
@@ -466,7 +460,6 @@ function deleteBlocksFromSlide(editor: EditorType): EditorType {
 }
 
 function setLocking(editor: EditorType, { isLocked }: { isLocked: boolean }): EditorType {
-
     if (editor.selectedSlideId == null) {
         return editor
     }
@@ -584,7 +577,7 @@ function resizeBlock(editor: EditorType, { newWidth, newHeight }: { newWidth: nu
     }
 }
 
-function setOpacityToBlock(editor: EditorType, newOpacity: number): EditorType {
+function setOpacityToBlock(editor: EditorType, {newOpacity}: {newOpacity: number}): EditorType {
     if (newOpacity < 0 || newOpacity > 1) {
         return editor
     }
@@ -661,7 +654,52 @@ function changeTextBlockContent(editor: EditorType, { id, newContent }: { id: st
     }
 }
 
-function changeTextBlockFontFamily(editor: EditorType, newFontFamily: string): EditorType {
+function replaceImage(editor: EditorType, {id, newPath}: {id: string, newPath: string}): EditorType {    
+    if (editor.selectedSlideId == null) {
+        return editor
+    }
+
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    if (currentSlide == null) {
+        return editor
+    }
+
+    const block = currentSlide.blocks.find(block => block.id == id)
+    if (block == undefined) {
+        return editor
+    }
+
+    if (block.type == 'text_block') {
+        return editor
+    }
+    
+    const newBlock = {
+        ...block,
+        imagePath: newPath
+    }
+
+    const newSlide = {
+        ...currentSlide,
+        blocks: currentSlide.blocks.filter(block => {
+            if (block.id == newBlock.id) {
+                return newBlock
+            }
+            return block
+        })
+    }
+
+    const newPresentation = {
+        ...editor.presentation,
+        listSlides: new Map(editor.presentation.listSlides).set(editor.selectedSlideId, newSlide)
+    }
+
+    return {
+        ...editor,
+        presentation: newPresentation
+    }
+}
+
+function changeTextBlockFontFamily(editor: EditorType, {newFontFamily}: {newFontFamily: string}): EditorType {
     if (editor.selectedSlideId == null) {
         return editor
     }
@@ -700,7 +738,7 @@ function changeTextBlockFontFamily(editor: EditorType, newFontFamily: string): E
     }
 }
 
-function changeTextBlockFontSize(editor: EditorType, newFontSize: number): EditorType {
+function changeTextBlockFontSize(editor: EditorType, {newFontSize}: {newFontSize: number}): EditorType {
     if (editor.selectedSlideId == null) {
         return editor
     }
@@ -739,7 +777,7 @@ function changeTextBlockFontSize(editor: EditorType, newFontSize: number): Edito
     }
 }
 
-function changeTextBlockFontColor(editor: EditorType, newFontColor: string): EditorType {
+function changeTextBlockFontColor(editor: EditorType, {newFontColor}: {newFontColor: string}): EditorType {
     if (editor.selectedSlideId == null) {
         return editor
     }
@@ -784,6 +822,7 @@ function getHighOverlayPriority(blocks: Array<TextSlideObject | ImageSlideObject
 
 function saveDocument(editor: EditorType): EditorType {
     localStorage.clear()
+    console.log(editor)
     
     const listSlidesObject = Object.fromEntries(editor.presentation.listSlides)
 
@@ -830,10 +869,10 @@ function saveDocumentToFile(editor: EditorType): EditorType {
     return editor
 }
 
-function getDocument(): EditorType | undefined {
+function getDocument(): EditorType {
     const editorJSON = localStorage.getItem('editor')
     if (editorJSON == null) {
-        return undefined
+        return createEditor()
     }
 
     const editor = JSON.parse(editorJSON)
@@ -849,9 +888,8 @@ function getDocument(): EditorType | undefined {
     return editor as EditorType
 }
 
-function loadDocumentFromJSON(editor: EditorType, {editorJSON}: {editorJSON: string}): EditorType | undefined {
+function loadDocumentFromJSON(editor: EditorType, {editorJSON}: {editorJSON: string}): EditorType {
     const newEditor = JSON.parse(editorJSON)
-
 
     if (newEditor.presentation && typeof newEditor.presentation.listSlides == 'object') {
         newEditor.presentation.listSlides = new Map(Object.entries(newEditor.presentation.listSlides))
@@ -883,6 +921,7 @@ export {
     createImageBlock,
     deleteBlocksFromSlide,
     changeTextBlockContent,
+    replaceImage,
     changeBlockPosition,
     resizeBlock,
     setOpacityToBlock,

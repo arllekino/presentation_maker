@@ -22,5 +22,7 @@
     "textAlignment": "Выравнивание текста",
     "opacity": "Непрозрачность",
     "shadow": "Тень",
-    "sizeAndPosition": "Размер & позиция"
+    "sizeAndPosition": "Размер & позиция",
+    "image": "Картинка",
+    "replaceMedia": "Заменить картинку"
 }

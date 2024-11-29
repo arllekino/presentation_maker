@@ -1,4 +1,4 @@
-import { loadDocumentFromJSON } from '../Functions/modificationFunctions'
+import { loadDocumentFromJSON } from '../Store/Functions/modificationFunctions'
 import { dispatch } from '../Store/Editor'
 
 const useLoadFromFileEditor = async (event: React.ChangeEvent<HTMLInputElement>) => {

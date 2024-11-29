@@ -1,4 +1,4 @@
-import { createImageBlock } from '../../Functions/modificationFunctions'
+import { createImageBlock } from '../../Store/Functions/modificationFunctions'
 import { dispatch } from '../../Store/Editor'
 import { convertImageToBase64, getImageDimensions } from '../ImageUtils'
 

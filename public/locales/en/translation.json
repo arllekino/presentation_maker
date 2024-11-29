@@ -22,5 +22,7 @@
     "textAlignment": "Text alignment",
     "opacity": "Opacity",
     "shadow": "Shadow",
-    "sizeAndPosition": "Size & position"
+    "sizeAndPosition": "Size & position",
+    "image": "Image",
+    "replaceMedia": "Replace media"
 }

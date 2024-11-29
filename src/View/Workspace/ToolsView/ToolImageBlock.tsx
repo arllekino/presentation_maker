@@ -1,18 +1,18 @@
-import { useTranslation } from 'react-i18next'
 import styles from '../Tools/Tools.module.css'
-import ListButton, { ListItem } from '../../../components/ListButton/ListButton'
-import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import Button from '../../../components/Button/Button'
 import { dispatch, getEditor } from '../../../Store/Editor'
 import { lowerOverlayPriority, raiseOverlayPriority, setLocking } from '../../../Store/Functions/modificationFunctions'
+import ButtonInput from '../../../components/Button/ButtonInput'
+import { v4 as uuid } from 'uuid'
+import getImageReplacer from '../../../Utils/InputSet/GetImageReplacer'
 
-function ToolTextBlock() {
+
+function ToolImageBlock() {
     const editor = getEditor()
     const selectedSlideId = editor.selectedSlideId
     const presentation = editor.presentation
     const { t } = useTranslation()
-    const [isOpen, setIsOpen] = useState(false)
-    // cosnst
 
     if (!selectedSlideId || editor.selectedBlockIds.length != 1) {
         return
@@ -31,27 +31,24 @@ function ToolTextBlock() {
         return
     }
 
-    const listItems: ListItem[] = [{
-        text: 'asd',
-        action: () => console.log(123)
-    }]
-
     const toFront = () => {
         dispatch(raiseOverlayPriority, { slideObject: slideObject })
     }
-    
+
     const toBack = () => {
         dispatch(lowerOverlayPriority, { slideObject: slideObject })
     }
 
     const onClickLock = () => {
-        dispatch(setLocking, {isLocked: !slideObject.isFixed})
+        dispatch(setLocking, { isLocked: !slideObject.isFixed })
     }
+
+    const setImage = getImageReplacer(slideObject.id)
 
     return (
         <>
             <div className={styles.toolTitleArea}>
-                <span className={styles.toolTitle}>{t('text')}</span>
+                <span className={styles.toolTitle}>{t('image')}</span>
             </div>
 
             <div className={styles.toolMain}>
@@ -64,31 +61,24 @@ function ToolTextBlock() {
                                 ? 'src/Assets/icon_locked.svg'
                                 : 'src/Assets/icon_unlocked.svg'
                             }
-                            alt=""
+                            alt=''
                             className={styles.iconLock}
                             onClick={onClickLock}
                         />
                     </span>
-                    <img src="src/Assets/icon_chevron_right.svg" alt="" className={styles.iconTextAreaChevron} />
+                    <img src='src/Assets/icon_chevron_right.svg' alt='' className={styles.iconTextAreaChevron} />
                 </div>
 
                 <div className={styles.toolUtilsArea}>
-                    <span className={styles.toolSubtitle}>
-                        {t('textStyle')}
-                    </span>
-                    <ListButton
-                        className={styles.toolButton}
-                        action={() => setIsOpen(!isOpen)}
-                        onClose={() => setIsOpen(false)}
-                        text={t('normalSize')}
-                        listItem={listItems}
-                        isOpen={isOpen}
-                        icon={{
-                            path: 'src/Assets/icon_chevron_right.svg',
-                            className: styles.iconChevron
-                        }}
-
-                    />
+                    <div className={styles.toolWrapper}>
+                        <ButtonInput
+                            labelId={uuid()}
+                            className={styles.toolSubtitle}
+                            action={setImage}
+                            text={t('replaceMedia')}
+                            inputType={'file'}
+                        />
+                    </div>
                 </div>
                 <div className={styles.toolUtilsArea}>
                     <span className={styles.toolSubtitle}>
@@ -136,4 +126,4 @@ function ToolTextBlock() {
     )
 }
 
-export default ToolTextBlock
+export default ToolImageBlock

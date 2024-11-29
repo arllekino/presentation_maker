@@ -1,4 +1,4 @@
-import { setBackgroundImageSlide } from "../../Functions/modificationFunctions"
+import { setBackgroundImageSlide } from "../../Store/Functions/modificationFunctions"
 import { dispatch } from "../../Store/Editor"
 import { convertImageToBase64 } from "../ImageUtils"
 
