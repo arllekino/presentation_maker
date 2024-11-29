@@ -3,7 +3,7 @@ import { PresentationType } from '../Types/PresentationType'
 import { SlideType } from '../Types/SlideType'
 import { ImageSlideObject, TextSlideObject } from '../Types/SlideObjectTypes'
 import { EditorType } from '../Types/EditorType'
-import isEditorValid from '../Utils/Validation/ValidateEditor'
+import isDocumentValid from '../Utils/Validation/ValidateEditor'
 import { DefaultSlideSetting } from '../Utils/DefaultSlideSettings'
 
 function createEditor(): EditorType {
@@ -783,8 +783,8 @@ function getHighOverlayPriority(blocks: Array<TextSlideObject | ImageSlideObject
 }
 
 function saveDocument(editor: EditorType): EditorType {
-    localStorage.clear()
-    
+    localStorage.removeItem('editor')
+
     const listSlidesObject = Object.fromEntries(editor.presentation.listSlides)
 
     const editorCopy = {
@@ -794,8 +794,8 @@ function saveDocument(editor: EditorType): EditorType {
             listSlides: listSlidesObject,
         },
     }
-    
-    if (isEditorValid(editor)) {
+
+    if (isDocumentValid(editor)) {
         const editorJSON = JSON.stringify(editorCopy)
         localStorage.setItem('editor', editorJSON)
     }
@@ -814,16 +814,16 @@ function saveDocumentToFile(editor: EditorType): EditorType {
             listSlides: listSlidesObject,
         },
     }
-    
-    if (isEditorValid(editor)) {
+
+    if (isDocumentValid(editor)) {
         const editorJSON = JSON.stringify(editorCopy)
-        const file = new Blob([editorJSON], {type: 'application/json'})
+        const file = new Blob([editorJSON], { type: 'application/json' })
         const url = URL.createObjectURL(file)
         const link = document.createElement('a')
         link.href = url
         link.download = filename
         link.click()
-    
+
         URL.revokeObjectURL(url)
     }
 
@@ -836,28 +836,33 @@ function getDocument(): EditorType | undefined {
         return undefined
     }
 
-    const editor = JSON.parse(editorJSON)
+    let editor
+    try {
+        editor = JSON.parse(editorJSON);
+    } catch (error) {
+        console.error('Не удалось открыть автосохранненый файл', error)
+        return createEditor()
+    }
 
     if (editor.presentation && typeof editor.presentation.listSlides == 'object') {
         editor.presentation.listSlides = new Map(Object.entries(editor.presentation.listSlides))
     }
 
-    if (!isEditorValid(editor)) {
+    if (!isDocumentValid(editor)) {
         return createEditor()
     }
-
     return editor as EditorType
 }
 
-function loadDocumentFromJSON(editor: EditorType, {editorJSON}: {editorJSON: string}): EditorType | undefined {
+function loadDocumentFromJSON(editor: EditorType, { editorJSON }: { editorJSON: string }): EditorType | undefined {
     const newEditor = JSON.parse(editorJSON)
 
 
     if (newEditor.presentation && typeof newEditor.presentation.listSlides == 'object') {
         newEditor.presentation.listSlides = new Map(Object.entries(newEditor.presentation.listSlides))
     }
-    
-    if (!isEditorValid(newEditor)) {
+
+    if (!isDocumentValid(newEditor)) {
         return editor
     }
 

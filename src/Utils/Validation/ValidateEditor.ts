@@ -2,7 +2,7 @@ import Ajv from 'ajv'
 import { EditorType } from '../../Types/EditorType'
 import schema from './ValidateScheme'
 
-function isEditorValid(editor: EditorType): boolean {
+function isDocumentValid(editor: EditorType): boolean {
     const ajv = new Ajv()
     
     const isValid = ajv.validate(schema, editor) 
@@ -14,4 +14,4 @@ function isEditorValid(editor: EditorType): boolean {
     return isValid 
 }
 
-export default isEditorValid
+export default isDocumentValid
