@@ -2,18 +2,18 @@ import styles from './../Tools/Tools.module.css'
 import buttonStyles from '../../../components/Button/Button.module.css'
 import ButtonInput from '../../../components/Button/ButtonInput'
 import { useTranslation } from 'react-i18next'
-import getImageBackgroundSetter from '../../../Utils/InputSet/SetImageBackground'
-import getColorBackgroundSetter from '../../../Utils/InputSet/SetColorBackground'
-import { getEditor } from '../../../Store/Editor'
+import useGetImageBackgroundSetter from '../../../Utils/InputSet/useGetImageBackgroundSetter'
+import useGetColorBackgroundSetter from '../../../Utils/InputSet/useGetColorBackgroundSetter'
 import { v4 as uuid } from 'uuid'
+import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
 
 function ToolSlide({ slideId }: { slideId: string | null }) {
-    const presentation = getEditor().presentation
+    const presentation = useAppSelector((state => state.presentation))
 
     const { t } = useTranslation()
 
-    const setImageBackground = getImageBackgroundSetter(slideId)
-    const setColorBackground = getColorBackgroundSetter(slideId)
+    const setImageBackground = useGetImageBackgroundSetter(slideId)
+    const setColorBackground = useGetColorBackgroundSetter(slideId)
 
     let color = '#FFFFFF'
 

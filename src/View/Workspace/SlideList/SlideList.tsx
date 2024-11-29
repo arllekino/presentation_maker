@@ -17,13 +17,11 @@ function SlideList() {
 	const slideList = useRef<HTMLDivElement>(null)
 	const [slideIdMenuOpen, setSlideIdMenuOpen] = useState('')
 
-	
+
 	const editor = useAppSelector((state => state))
 	const orderedSlideIds = editor.presentation.orderedSlideIds
 	const currentSlideId = editor.selectedSlideId
 	const handleMouseDown = useDraggableVertical(orderedSlideIds, slideList)
-
-	const listSlides = editor.presentation.listSlides
 
 	const deleteItem: ListItem = {
 		text: t('deleteSlide'),
@@ -40,8 +38,6 @@ function SlideList() {
 		<>
 			<div className={styles.slideList} ref={slideList}>
 				{orderedSlideIds.map((slideId, index) => {
-					const slide = listSlides.get(slideId);
-
 					const onRightMouseClick = (event: React.MouseEvent<HTMLDivElement>) => {
 						event.preventDefault()
 						setSlideIdMenuOpen(slideId)
@@ -64,8 +60,8 @@ function SlideList() {
 								</span>
 								<div className={styles.previewWrap} style={stylesPreviewWrap}>
 									<Slide
-										slide={slide}
-										scale={DefaultSlideSetting.previewScale}
+										slideId={slideId}
+										scale={Number(DefaultSlideSetting.previewScale)}
 									/>
 								</div>
 

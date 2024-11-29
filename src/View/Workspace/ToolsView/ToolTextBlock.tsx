@@ -3,16 +3,17 @@ import styles from '../Tools/Tools.module.css'
 import ListButton, { ListItem } from '../../../components/ListButton/ListButton'
 import { useState } from 'react'
 import Button from '../../../components/Button/Button'
-import { dispatch, getEditor } from '../../../Store/Editor'
-import { lowerOverlayPriority, raiseOverlayPriority, setLocking } from '../../../Store/Functions/modificationFunctions'
+import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
+import { useAppActions } from '../../../Store/Hooks/useAppActions'
 
 function ToolTextBlock() {
-    const editor = getEditor()
+    const editor = useAppSelector((state => state))
+    const { raiseOverlayPriority, lowerOverlayPriority, setLocking } = useAppActions()
+
     const selectedSlideId = editor.selectedSlideId
     const presentation = editor.presentation
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false)
-    // cosnst
 
     if (!selectedSlideId || editor.selectedBlockIds.length != 1) {
         return
@@ -37,15 +38,15 @@ function ToolTextBlock() {
     }]
 
     const toFront = () => {
-        dispatch(raiseOverlayPriority, { slideObject: slideObject })
+        raiseOverlayPriority(slideObject)
     }
     
     const toBack = () => {
-        dispatch(lowerOverlayPriority, { slideObject: slideObject })
+        lowerOverlayPriority(slideObject)
     }
 
     const onClickLock = () => {
-        dispatch(setLocking, {isLocked: !slideObject.isFixed})
+        setLocking(!slideObject.isFixed)
     }
 
     return (

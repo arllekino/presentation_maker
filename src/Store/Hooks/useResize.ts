@@ -1,6 +1,5 @@
-import { RefObject } from "react"
-import { dispatch } from "../Editor"
-import { changeBlockPosition, resizeBlock } from "../Functions/modificationFunctions"
+import { RefObject } from 'react'
+import { useAppActions } from './useAppActions'
 
 enum PointType {
     topLeft,
@@ -29,6 +28,8 @@ type PointProps = {
 }
 
 function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: PointProps) {
+    const {changeBlockPosition, resizeBlock} = useAppActions()
+   
     let size: Size = { width: 0, height: 0 }
     let position: Position = { x: 0, y: 0 }
     const startPos: Position = { x: 0, y: 0 }
@@ -70,8 +71,8 @@ function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: Po
     }
 
     const handleMouseUp = () => {
-        dispatch(changeBlockPosition, { newX: position.x, newY: position.y })
-        dispatch(resizeBlock, { newWidth: size.width, newHeight: size.height })
+        changeBlockPosition(position.x, position.y)
+        resizeBlock(size.width, size.height)
 
         window.removeEventListener('mousemove', handleMouseMove)
         window.removeEventListener('mouseup', handleMouseUp)

@@ -1,16 +1,14 @@
 import Slide from '../../../components/Slide/Slide'
-import { SlideType } from '../../../Types/SlideType'
+import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
 import styles from './Window.module.css'
 
-type WindowProps = {
-    slide: SlideType | undefined
-}
+function Window() {
+    const currentSlideId = useAppSelector((state => state.selectedSlideId))
 
-function Window({ slide }: WindowProps) {
     return (
         <div className={styles.slideArea}>
             <Slide
-                slide={slide}
+                slideId={currentSlideId}
             />
         </div>
     )

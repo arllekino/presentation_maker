@@ -1,8 +1,10 @@
-import { setBackgroundImageSlide } from "../../Store/Functions/modificationFunctions"
 import { dispatch } from "../../Store/Editor"
 import { convertImageToBase64 } from "../ImageUtils"
+import { useAppActions } from "../../Store/Hooks/useAppActions"
 
-function getImageBackgroundSetter(id: string | null): (event: React.ChangeEvent<HTMLInputElement>) => void {
+function useGetImageBackgroundSetter(id: string | null): (event: React.ChangeEvent<HTMLInputElement>) => void {
+    const { setBackgroundImageSlide } = useAppActions()
+   
     const setImage = (event: React.ChangeEvent<HTMLInputElement>) => {
         const target = event.target as HTMLInputElement
         const file = target.files?.[0]
@@ -18,4 +20,4 @@ function getImageBackgroundSetter(id: string | null): (event: React.ChangeEvent<
     return setImage
 }
 
-export default getImageBackgroundSetter
+export default useGetImageBackgroundSetter

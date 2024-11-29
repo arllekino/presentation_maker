@@ -5,17 +5,15 @@ import SlideList from './SlideList/SlideList'
 import Tools from './Tools/Tools'
 import Button from '../../components/Button/Button'
 import { useTranslation } from 'react-i18next'
-import { EditorType } from '../../Types/EditorType'
 import { useAppActions } from '../../Store/Hooks/useAppActions'
+import { useAppSelector } from '../../Store/Hooks/useAppSelector'
 
-type WorkspaceProps = {
-    editor: EditorType
-}
-
-function Workspace({ editor }: WorkspaceProps) {
+function Workspace() {
     const { t } = useTranslation()
 
     const { createSlide } = useAppActions()
+
+    const editor = useAppSelector((state => state))
 
     const slide = editor.selectedSlideId == null ? undefined : editor.presentation.listSlides.get(editor.selectedSlideId)
 
@@ -32,17 +30,10 @@ function Workspace({ editor }: WorkspaceProps) {
                             className: buttonStyles.iconAddSlide,
                         }}
                     />
-
                 </div>
-                <SlideList
-                    orderedSlideIds={editor.presentation.orderedSlideIds}
-                    listSlides={editor.presentation.listSlides}
-                    currentSlideId={editor.selectedSlideId}
-                />
+                <SlideList/>
             </div>
-            <Window
-                slide={slide}
-            />
+            <Window/>
             <Tools
                 selectedSlideId={slide?.id}
             />

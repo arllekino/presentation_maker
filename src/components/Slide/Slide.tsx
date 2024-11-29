@@ -1,21 +1,18 @@
 import styles from './Slide.module.css'
 import Placeholder from '../Placeholder/Placeholder'
 import { DefaultSlideSetting } from '../../Utils/DefaultSlideSettings'
-import { SlideType } from '../../Types/SlideType'
 import { useTranslation } from 'react-i18next'
-import { dispatch, getEditor } from '../../Store/Editor'
-import { createSlide } from '../../Store/Functions/modificationFunctions'
 import ObjectWrapper from '../ObjectWrapper/ObjectWrapper'
+import { useAppSelector } from '../../Store/Hooks/useAppSelector'
+import { useAppActions } from '../../Store/Hooks/useAppActions'
 
-type SlideProps = {
-    slide: SlideType | undefined
-    scale?: number
-}
-
-function Slide({ slide, scale }: SlideProps) {
+function Slide({slideId, scale}: {slideId: string | null, scale?: number}) {
     const { t } = useTranslation()
 
-    const editor = getEditor()
+    const editor = useAppSelector((state => state))
+    const slide = editor.presentation.listSlides.get(slideId ?? '')
+    
+    const { createSlide } = useAppActions()
 
     const slideStyle: React.CSSProperties = {
         width: `${DefaultSlideSetting.width * (scale ?? 1)}px`,
@@ -32,7 +29,7 @@ function Slide({ slide, scale }: SlideProps) {
                 <Placeholder
                     text={t('createSlide')}
                     scale={scale}
-                    action={() => dispatch(createSlide)}
+                    action={createSlide}
                 />
             </div>
         )

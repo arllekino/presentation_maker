@@ -1,7 +1,7 @@
 import { setBackgroundColorSlide } from "../../Store/Functions/modificationFunctions"
 import { dispatch } from "../../Store/Editor"
 
-function getColorBackgroundSetter(id: string | null): (event: React.ChangeEvent<HTMLInputElement>) => void {
+function useGetColorBackgroundSetter(id: string | null): (event: React.ChangeEvent<HTMLInputElement>) => void {
     const setColor = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setBackgroundColorSlide, {
             slideId: id,
@@ -12,4 +12,4 @@ function getColorBackgroundSetter(id: string | null): (event: React.ChangeEvent<
     return setColor
 }
 
-export default getColorBackgroundSetter
+export default useGetColorBackgroundSetter

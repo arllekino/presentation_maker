@@ -5,13 +5,12 @@ import styles from './TopBar.module.css'
 import buttonStyles from '../../components/Button/Button.module.css'
 import ListButton from '../../components/ListButton/ListButton'
 import listButtonStyles from '../../components/ListButton/ListButton.module.css'
-import { createTextBlock, deleteBlocksFromSlide, renamePresentation, saveDocumentToFile } from '../../Store/Functions/modificationFunctions'
-import { dispatch } from '../../Store/Editor'
 import ButtonInput from '../../components/Button/ButtonInput'
 import useLanguageItems from '../../Utils/ListItems/LanguageItems'
 import getImageSetter from '../../Utils/InputSet/GetImageSetter'
 import { v4 as uuid } from 'uuid'
 import useLoadFromFileEditor from '../../Utils/LoadFromFIleEditor'
+import { useAppActions } from '../../Store/Hooks/useAppActions'
 
 function TopBar() {
     const { t, i18n } = useTranslation()
@@ -21,23 +20,23 @@ function TopBar() {
     const closeMenu = () => setIsOpen(false)
 
     const listItems = useLanguageItems(listButtonStyles.iconFlag)
+    const { createTextBlock, deleteBlocksFromSlide, renamePresentation, saveDocumentToFile } = useAppActions()
 
     const onTitleChange: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(renamePresentation, (event.target as HTMLInputElement).value)
+        renamePresentation((event.target as HTMLInputElement).value)
     }
 
+
     const setTextBlock = () => {
-        dispatch(createTextBlock, {
+        createTextBlock({
             x: 400,
             y: 400,
             width: 300,
             height: 50,
+            content: ''
         })
     }
     const setImage = getImageSetter
-    const saveToFile = () => {
-        dispatch(saveDocumentToFile)
-    }
     const loadFromFile = useLoadFromFileEditor
 
     return (
@@ -90,7 +89,7 @@ function TopBar() {
 
                 <Button
                     className={buttonStyles.deleteBlock}
-                    action={() => dispatch(deleteBlocksFromSlide)}
+                    action={deleteBlocksFromSlide}
                     text={t('deleteBlockPlaceholder')}
                     icon={{
                         path: 'src/assets/icon_trash.svg',
@@ -102,7 +101,7 @@ function TopBar() {
             <div className={styles.utils}>
                 <Button
                     className={styles.saveTofile}
-                    action={saveToFile}
+                    action={saveDocumentToFile}
                     text={'Save'}
                 />
 

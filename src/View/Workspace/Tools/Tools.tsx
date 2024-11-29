@@ -1,21 +1,22 @@
 import styles from './Tools.module.css'
 import ToolSlide from '../ToolsView/ToolSlide'
-import { getEditor } from '../../../Store/Editor'
 import { ImageSlideObject, TextSlideObject } from '../../../Types/SlideObjectTypes'
 import ToolTextBlock from '../ToolsView/ToolTextBlock'
 import ToolImageBlock from '../ToolsView/ToolImageBlock'
+import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
 
 type ToolsProps = {
     selectedSlideId?: string
 }
 
 function Tools({ selectedSlideId }: ToolsProps) {
+    const editor = useAppSelector((state => state))
+    
     if (selectedSlideId == undefined) {
         return (
             <div className={styles.toolBar}></div>
         )
     }
-    const editor = getEditor()
 
     const presentation = editor.presentation
     const selectedSlide = presentation.listSlides.get(selectedSlideId)

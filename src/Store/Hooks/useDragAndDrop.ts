@@ -1,6 +1,5 @@
 import { RefObject } from 'react'
-import { dispatch } from '../Editor'
-import { changeBlockPosition, unsetSelectedSlideObject } from '../Functions/modificationFunctions'
+import { useAppActions } from './useAppActions'
 
 function useDragAndDrop(
     block: RefObject<HTMLParagraphElement | HTMLDivElement>,
@@ -8,6 +7,8 @@ function useDragAndDrop(
     isFixed: boolean
 ) {
     let delta = { x: 0, y: 0 }
+
+    const { unsetSelectionSlideObjects, changeBlockPosition } = useAppActions()
 
     const handleMouseMove = ((e: MouseEvent) => {
         if (block.current && block.current.parentElement) {
@@ -24,7 +25,7 @@ function useDragAndDrop(
             const newX = e.clientX - block.current.parentElement.getBoundingClientRect().x - delta.x
             const newY = e.clientY - block.current.parentElement.getBoundingClientRect().y - delta.y
 
-            dispatch(changeBlockPosition, { newX, newY })
+            changeBlockPosition(newX, newY)
         }
 
         window.removeEventListener('mousemove', handleMouseMove)
@@ -40,7 +41,7 @@ function useDragAndDrop(
                 if (!currentBlock.contains(e.target as Node) &&
                     parentElement.contains(e.target as Node)
                 ) {
-                    dispatch(unsetSelectedSlideObject, { slideObjectId: blockId })
+                    unsetSelectionSlideObjects(blockId)
                 }
             }
 
@@ -62,7 +63,7 @@ function useDragAndDrop(
     })
 
     if (isFixed) {
-        return () => {}
+        return () => { }
     }
 
     return handleMouseDown

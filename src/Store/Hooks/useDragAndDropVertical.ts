@@ -1,13 +1,15 @@
 import React, { RefObject } from 'react'
-import { changeSlidePosition } from '../Functions/modificationFunctions'
-import { dispatch } from '../Editor'
+import { useAppActions } from './useAppActions'
 
 type ElementProperties = {
     value: HTMLElement,
     index: number
 }
 
+
 function useDraggableVertical(orderedSlideIds: string[], listSlides: RefObject<HTMLDivElement>) {
+    const { changeSlidePosition } = useAppActions()
+    
     let element: ElementProperties | undefined
     let delta = 0
 
@@ -37,7 +39,7 @@ function useDraggableVertical(orderedSlideIds: string[], listSlides: RefObject<H
     const handleMouseUp = () => {
         if (element) {
             const newIndex = getIndexWhereToSet(listSlides, element.value.getBoundingClientRect().y)
-            dispatch(changeSlidePosition, { id: orderedSlideIds[element.index], newPosition: newIndex })
+            changeSlidePosition(orderedSlideIds[element.index], newIndex)
 
             element.value.style.position = ''
             element.value.style.zIndex = ''
