@@ -31,8 +31,8 @@ type PointProps = {
 function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: PointProps) {
     let size: Size = { width: 0, height: 0 }
     let position: Position = { x: 0, y: 0 }
-    let startPos: Position = { x: 0, y: 0 }
-    let startSize: Size = {width: 0, height: 0}
+    const startPos: Position = { x: 0, y: 0 }
+    const startSize: Size = {width: 0, height: 0}
 
     const handleMouseDown = () => {
         if (block.current && block.current.parentElement) {
@@ -89,11 +89,11 @@ function onResize(block: RefObject<HTMLDivElement>, point: PointProps, mousePos:
     const blockProps = block.current.getBoundingClientRect()
     const parentProps = block.current.parentElement?.getBoundingClientRect()
 
-    let position: Position = {
+    const position: Position = {
         x: startPos.x,
         y: startPos.y
     }
-    let size: Size = {
+    const size: Size = {
         width: blockProps.width,
         height: blockProps.height
     }

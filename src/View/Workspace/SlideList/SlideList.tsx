@@ -68,7 +68,7 @@ function SlideList({ orderedSlideIds, listSlides, currentSlideId }: SlideListPro
 								<div className={styles.previewWrap} style={stylesPreviewWrap}>
 									<Slide
 										slide={slide}
-										scale={DefaultSlideSetting.previewScale}
+										scale={ Number(DefaultSlideSetting.previewScale)}
 									/>
 								</div>
 
