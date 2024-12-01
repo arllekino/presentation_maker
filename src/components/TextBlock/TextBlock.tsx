@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { TextSlideObject } from '../../Types/SlideObjectTypes'
-import { dispatch } from '../../Store/Editor'
 import styles from './TextBlock.module.css'
-import { changeTextBlockContent } from '../../Store/Functions/modificationFunctions'
 import { useState } from 'react'
+import { useAppActions } from '../../Store/Hooks/useAppActions'
 
 type TextBlockProps = {
     textSlideObject: TextSlideObject
@@ -12,13 +11,11 @@ type TextBlockProps = {
 
 function TextBlock({ textSlideObject, scale }: TextBlockProps) {
     const { t } = useTranslation()
-
+    const { changeTextBlockContent } = useAppActions()
     const [isContentEditable, setIsContentEditable] = useState(false)
     const [textContent, setTextContent] = useState('')
 
     const styleTextBlock: React.CSSProperties = {
-        width: textSlideObject.size.width * (scale ?? 1),
-        height: textSlideObject.size.height * (scale ?? 1),
         opacity: textSlideObject.opacity,
         zIndex: textSlideObject.overlayPriority,
         fontFamily: textSlideObject.font.family,
@@ -35,7 +32,7 @@ function TextBlock({ textSlideObject, scale }: TextBlockProps) {
     }
 
     const handleBlur = () => {
-        dispatch(changeTextBlockContent, {id: textSlideObject.id, newContent: textContent})
+        changeTextBlockContent(textSlideObject.id, textContent)
     }
 
     return (

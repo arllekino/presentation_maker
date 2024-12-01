@@ -192,9 +192,10 @@ function getDocument() {
     }
 }
 
-function loadDocumentFromJSON() {
+function loadDocumentFromJSON(editorJSON: string) {
     return {
         type: ActionType.LOAD_DOCUMENT_FROM_JSON,
+        payload: { editorJSON }
     }
 }
 

@@ -1,4 +1,3 @@
-import { dispatch } from "../../Store/Editor"
 import { convertImageToBase64 } from "../ImageUtils"
 import { useAppActions } from "../../Store/Hooks/useAppActions"
 
@@ -10,7 +9,7 @@ function useGetImageBackgroundSetter(id: string | null): (event: React.ChangeEve
         const file = target.files?.[0]
         if (file) {
             convertImageToBase64(file).then(base64String => {
-                dispatch(setBackgroundImageSlide, { slideId: id, path: base64String })
+                setBackgroundImageSlide(id, base64String)
             })
         }
 

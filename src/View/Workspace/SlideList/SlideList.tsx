@@ -17,10 +17,8 @@ function SlideList() {
 	const slideList = useRef<HTMLDivElement>(null)
 	const [slideIdMenuOpen, setSlideIdMenuOpen] = useState('')
 
-
-	const editor = useAppSelector((state => state))
-	const orderedSlideIds = editor.presentation.orderedSlideIds
-	const currentSlideId = editor.selectedSlideId
+	const orderedSlideIds = useAppSelector((state => state.presentation.orderedSlideIds))
+	const currentSlideId = useAppSelector((state => state.selectedSlideId))
 	const handleMouseDown = useDraggableVertical(orderedSlideIds, slideList)
 
 	const deleteItem: ListItem = {

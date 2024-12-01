@@ -6,16 +6,11 @@ import Tools from './Tools/Tools'
 import Button from '../../components/Button/Button'
 import { useTranslation } from 'react-i18next'
 import { useAppActions } from '../../Store/Hooks/useAppActions'
-import { useAppSelector } from '../../Store/Hooks/useAppSelector'
 
 function Workspace() {
-    const { t } = useTranslation()
-
     const { createSlide } = useAppActions()
-
-    const editor = useAppSelector((state => state))
-
-    const slide = editor.selectedSlideId == null ? undefined : editor.presentation.listSlides.get(editor.selectedSlideId)
+    
+    const { t } = useTranslation()
 
     return (
         <div className={styles.workspace}>
@@ -34,9 +29,7 @@ function Workspace() {
                 <SlideList/>
             </div>
             <Window/>
-            <Tools
-                selectedSlideId={slide?.id}
-            />
+            <Tools/>
             
         </div>
     )

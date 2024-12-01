@@ -1,26 +1,30 @@
-import { loadDocumentFromJSON } from '../Store/Functions/modificationFunctions'
-import { dispatch } from '../Store/Editor'
+import { useAppActions } from '../Store/Hooks/useAppActions'
 
-const useLoadFromFileEditor = async (event: React.ChangeEvent<HTMLInputElement>) => {
+const useLoadFromFileEditor = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { loadDocumentFromJSON } = useAppActions() // Place the hook call here
     const target = event.target as HTMLInputElement
     const file = target.files?.[0]
 
-    if (file) {
-        const fileReader = new FileReader()
+    const loadFile = async () => {
+        if (file) {
+            const fileReader = new FileReader()
 
-        fileReader.onload = (event: ProgressEvent<FileReader>) => {
-            try {
-                const editorJSON = event.target?.result
-                dispatch(loadDocumentFromJSON, {editorJSON: editorJSON})
-            } catch {
-                console.log('Не удалось открыть файл')
+            fileReader.onload = (event: ProgressEvent<FileReader>) => {
+                try {
+                    const editorJSON = event.target?.result as string
+                    loadDocumentFromJSON(editorJSON)
+                } catch {
+                    console.log('Не удалось открыть файл')
+                }
             }
-        }
-        event.target.value = ''
 
-        fileReader.readAsText(file)
+            event.target.value = '' // Clear the input value
+
+            fileReader.readAsText(file)
+        }
     }
 
+    loadFile() // Call the async function here
 }
 
 export default useLoadFromFileEditor

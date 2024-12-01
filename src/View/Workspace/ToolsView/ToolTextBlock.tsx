@@ -7,15 +7,16 @@ import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
 import { useAppActions } from '../../../Store/Hooks/useAppActions'
 
 function ToolTextBlock() {
-    const editor = useAppSelector((state => state))
     const { raiseOverlayPriority, lowerOverlayPriority, setLocking } = useAppActions()
 
-    const selectedSlideId = editor.selectedSlideId
-    const presentation = editor.presentation
+    const selectedSlideId = useAppSelector((state => state.selectedSlideId))
+    const presentation = useAppSelector((state => state.presentation))
+    const selectedBlockIds = useAppSelector((state => state.selectedBlockIds))
+
     const { t } = useTranslation()
     const [isOpen, setIsOpen] = useState(false)
 
-    if (!selectedSlideId || editor.selectedBlockIds.length != 1) {
+    if (!selectedSlideId || selectedBlockIds.length != 1) {
         return
     }
 
@@ -25,7 +26,7 @@ function ToolTextBlock() {
     }
 
     const slideObject = slide.blocks.find(object => {
-        return object.id == editor.selectedBlockIds[0]
+        return object.id == selectedBlockIds[0]
     })
 
     if (!slideObject) {

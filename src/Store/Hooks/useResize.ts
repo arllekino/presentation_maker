@@ -29,11 +29,13 @@ type PointProps = {
 
 function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: PointProps) {
     const {changeBlockPosition, resizeBlock} = useAppActions()
+
+    const minSize: Size = {width: 50, height: 50}
+    const startPos: Position = { x: 0, y: 0 }
+    const startSize: Size = {width: 0, height: 0}
    
     let size: Size = { width: 0, height: 0 }
     let position: Position = { x: 0, y: 0 }
-    const startPos: Position = { x: 0, y: 0 }
-    const startSize: Size = {width: 0, height: 0}
 
     const handleMouseDown = () => {
         if (block.current && block.current.parentElement) {
@@ -42,6 +44,7 @@ function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: Po
 
             startPos.x = blockProps.x - parentBlockProps.x
             startPos.y = blockProps.y - parentBlockProps.y
+            position = startPos
             startSize.width = blockProps.width
             startSize.height = blockProps.height
 
@@ -54,7 +57,7 @@ function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: Po
         if (block.current) {
             const newProps = onResize(block, point, { x: event.clientX, y: event.clientY }, startPos, startSize)
 
-            if (newProps) {
+            if (newProps && newProps.size.width > minSize.width && newProps.size.height > minSize.height) {
                 if (newProps.position.x < newProps.position.x + newProps.size.width
                     && newProps.position.y < newProps.position.y + newProps.size.height
                 ) {

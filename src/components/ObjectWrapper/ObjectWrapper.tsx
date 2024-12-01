@@ -3,10 +3,9 @@ import { ImageSlideObject, TextSlideObject } from '../../Types/SlideObjectTypes'
 import TextBlock from '../TextBlock/TextBlock'
 import ImageBlock from '../ImageBlock/ImageBlock'
 import React, { useEffect, useRef, useState } from 'react'
-import { addBlockToSelected, selectBlock } from '../../Store/Functions/modificationFunctions'
 import useDragAndDrop from '../../Store/Hooks/useDragAndDrop'
-import { dispatch } from '../../Store/Editor'
 import useResize, { PointType } from '../../Store/Hooks/useResize'
+import { useAppActions } from '../../Store/Hooks/useAppActions'
 
 type ObjectWrapperProps = {
     slideObject: TextSlideObject | ImageSlideObject
@@ -15,10 +14,13 @@ type ObjectWrapperProps = {
 }
 
 function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
+    const { addBlockToSelected, selectBlock } = useAppActions()
+
     const blockId = slideObject.id
     const [selectFunction, setSelectFunction] = useState(() => selectBlock)
     const block = useRef<HTMLImageElement>(null)
     const dragAndDrop = useDragAndDrop(block, slideObject.id, slideObject.isFixed)
+
 
     const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
         if (event.target instanceof HTMLElement && event.target.classList.contains(styles.handle)) {
@@ -48,7 +50,7 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
             window.removeEventListener('keydown', handleKeyDown)
             window.removeEventListener('keyup', handleKeyUp)
         }
-    }, [])
+    }, [addBlockToSelected, selectBlock])
 
     const pointTopLeft = useRef<HTMLDivElement>(null)
     const pointTop = useRef<HTMLDivElement>(null)
@@ -93,7 +95,7 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
     })
 
     const makeFocus = () => {
-        dispatch(selectFunction, { blockId })
+        selectFunction(blockId)
     }
 
     const styleBlock: React.CSSProperties = {
@@ -107,7 +109,6 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
 
     const stylePont: React.CSSProperties = {
         display: (scale || slideObject.isFixed) ? 'none' : 'block',
-    
     }
 
     return (
@@ -193,7 +194,7 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
                     scale={scale}
                 />
             ) : (<div>
-</div>)}
+            </div>)}
         </div>
     )
 }

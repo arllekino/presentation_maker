@@ -4,32 +4,26 @@ import { ImageSlideObject, TextSlideObject } from '../../../Types/SlideObjectTyp
 import ToolTextBlock from '../ToolsView/ToolTextBlock'
 import ToolImageBlock from '../ToolsView/ToolImageBlock'
 import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
+import { SlideType } from '../../../Types/SlideType'
 
-type ToolsProps = {
-    selectedSlideId?: string
-}
+function Tools() {
+    const selectedBlockIds = useAppSelector((state => state.selectedBlockIds))
+    const selectedSlideId = useAppSelector((state => state.selectedSlideId))
+    const selectedSlide: SlideType | undefined = useAppSelector((state => state.presentation.listSlides.get(selectedSlideId ?? '')))
 
-function Tools({ selectedSlideId }: ToolsProps) {
-    const editor = useAppSelector((state => state))
-    
     if (selectedSlideId == undefined) {
         return (
             <div className={styles.toolBar}></div>
         )
     }
-
-    const presentation = editor.presentation
-    const selectedSlide = presentation.listSlides.get(selectedSlideId)
-
     if (selectedSlide == undefined) {
         return (<div className={styles.toolBar}></div>)
     }
 
     let currentBlock: TextSlideObject | ImageSlideObject | undefined
-    if (editor.selectedBlockIds.length == 1) {
-        
+    if (selectedBlockIds.length == 1) {
         currentBlock = selectedSlide.blocks.find(block => {
-            return block.id == editor.selectedBlockIds[0]
+            return block.id == selectedBlockIds[0]
         })
     }
 
@@ -47,7 +41,7 @@ function Tools({ selectedSlideId }: ToolsProps) {
 
             return (
                 <div className={styles.toolBar}>
-                    <ToolImageBlock/>
+                    <ToolImageBlock />
                 </div>
             )
 

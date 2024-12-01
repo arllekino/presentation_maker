@@ -1,37 +1,28 @@
 import { EditorType } from '../../Types/EditorType'
-import { createEditor } from '../Functions/modificationFunctions'
 import { ActionType, EditorAction } from './Action'
+import { createEditor, renamePresentation } from '../Functions/PresentationFunctions.ts'
+import { getDocument, loadDocumentFromJSON, saveDocument, saveDocumentToFile } from '../Functions/DocumentFunctions.ts'
+import { changeSlidePosition, createSlide, deleteSlide, selectSlide, setBackgroundColorSlide, setBackgroundImageSlide } from '../Functions/SlideFunctions.ts'
 import {
-    createSlide,
-    deleteSlide,
-    selectSlide,
-    unsetSelectedSlideObject,
-    renamePresentation,
-    changeSlidePosition,
-    setBackgroundColorSlide,
-    setBackgroundImageSlide,
-    selectBlock,
-    addBlockToSelected,
-    deleteBlockFromSelected,
     setLocking,
+    resizeBlock,
+    selectBlock,
+    replaceImage,
     createTextBlock,
     createImageBlock,
-    deleteBlocksFromSlide,
-    changeTextBlockContent,
-    replaceImage,
-    changeBlockPosition,
-    resizeBlock,
     setOpacityToBlock,
-    changeTextBlockFontFamily,
-    changeTextBlockFontSize,
-    changeTextBlockFontColor,
+    addBlockToSelected,
+    changeBlockPosition,
     raiseOverlayPriority,
     lowerOverlayPriority,
-    getDocument,
-    loadDocumentFromJSON,
-    saveDocument,
-    saveDocumentToFile
-} from '../Functions/modificationFunctions.ts'
+    deleteBlocksFromSlide,
+    changeTextBlockContent,
+    changeTextBlockFontSize,
+    deleteBlockFromSelected,
+    unsetSelectedSlideObject,
+    changeTextBlockFontColor,
+    changeTextBlockFontFamily,
+} from '../Functions/SlideObjectsFunctions.ts'
 
 const initialState = getDocument() || createEditor()
 

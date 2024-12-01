@@ -1,20 +1,21 @@
 import styles from '../Tools/Tools.module.css'
 import { useTranslation } from 'react-i18next'
 import Button from '../../../components/Button/Button'
-import { dispatch, getEditor } from '../../../Store/Editor'
-import { lowerOverlayPriority, raiseOverlayPriority, setLocking } from '../../../Store/Functions/modificationFunctions'
 import ButtonInput from '../../../components/Button/ButtonInput'
 import { v4 as uuid } from 'uuid'
-import getImageReplacer from '../../../Utils/InputSet/GetImageReplacer'
+import useGetImageReplacer from '../../../Utils/InputSet/useGetImageReplacer'
+import { useAppActions } from '../../../Store/Hooks/useAppActions'
+import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
 
 
 function ToolImageBlock() {
-    const editor = getEditor()
-    const selectedSlideId = editor.selectedSlideId
-    const presentation = editor.presentation
     const { t } = useTranslation()
-
-    if (!selectedSlideId || editor.selectedBlockIds.length != 1) {
+    const { raiseOverlayPriority, lowerOverlayPriority, setLocking } = useAppActions()
+    const selectedSlideId = useAppSelector((state => state.selectedSlideId))
+    const selectedBlockIds = useAppSelector((state => state.selectedBlockIds))
+    const presentation = useAppSelector((state => state.presentation))
+    
+    if (!selectedSlideId || selectedBlockIds.length != 1) {
         return
     }
 
@@ -24,7 +25,7 @@ function ToolImageBlock() {
     }
 
     const slideObject = slide.blocks.find(object => {
-        return object.id == editor.selectedBlockIds[0]
+        return object.id == selectedBlockIds[0]
     })
 
     if (!slideObject) {
@@ -32,18 +33,20 @@ function ToolImageBlock() {
     }
 
     const toFront = () => {
-        dispatch(raiseOverlayPriority, { slideObject: slideObject })
+        raiseOverlayPriority(slideObject)
     }
 
     const toBack = () => {
-        dispatch(lowerOverlayPriority, { slideObject: slideObject })
+        lowerOverlayPriority(slideObject)
     }
 
     const onClickLock = () => {
-        dispatch(setLocking, { isLocked: !slideObject.isFixed })
+        setLocking(!slideObject.isFixed)
     }
 
-    const setImage = getImageReplacer(slideObject.id)
+    const useHandleImageReplace = () => {
+        useGetImageReplacer(slideObject.id)
+    }
 
     return (
         <>
@@ -74,7 +77,7 @@ function ToolImageBlock() {
                         <ButtonInput
                             labelId={uuid()}
                             className={styles.toolSubtitle}
-                            action={setImage}
+                            action={useHandleImageReplace}
                             text={t('replaceMedia')}
                             inputType={'file'}
                         />

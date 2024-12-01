@@ -10,7 +10,7 @@ function Slide({slideId, scale}: {slideId: string | null, scale?: number}) {
     const { t } = useTranslation()
 
     const editor = useAppSelector((state => state))
-    const slide = editor.presentation.listSlides.get(slideId ?? '')
+    const slide = useAppSelector((state => state.presentation.listSlides.get(slideId ?? '')))
     
     const { createSlide } = useAppActions()
 

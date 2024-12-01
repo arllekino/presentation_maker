@@ -8,8 +8,6 @@ type ImageBlockProps = {
 
 function ImageBlock({ imageSlideObject, scale }: ImageBlockProps) {
     const styleImageBlock: React.CSSProperties = {
-        inlineSize: imageSlideObject.size.width * (scale ?? 1),
-        blockSize: imageSlideObject.size.height * (scale ?? 1),
         opacity: imageSlideObject.opacity,
         zIndex: imageSlideObject.overlayPriority,
         backgroundImage: `url(${imageSlideObject.imagePath})`

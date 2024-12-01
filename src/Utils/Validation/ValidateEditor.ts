@@ -1,6 +1,6 @@
 import Ajv from 'ajv'
 import { EditorType } from '../../Types/EditorType'
-import schema from './ValidateScheme'
+import schema from './Schema/ValidateScheme'
 
 function isEditorValid(editor: EditorType): boolean {
     const ajv = new Ajv()

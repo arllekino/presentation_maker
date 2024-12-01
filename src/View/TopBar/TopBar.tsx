@@ -7,10 +7,10 @@ import ListButton from '../../components/ListButton/ListButton'
 import listButtonStyles from '../../components/ListButton/ListButton.module.css'
 import ButtonInput from '../../components/Button/ButtonInput'
 import useLanguageItems from '../../Utils/ListItems/LanguageItems'
-import getImageSetter from '../../Utils/InputSet/GetImageSetter'
 import { v4 as uuid } from 'uuid'
 import useLoadFromFileEditor from '../../Utils/LoadFromFIleEditor'
 import { useAppActions } from '../../Store/Hooks/useAppActions'
+import handleImageUploadEvent from '../../Utils/InputSet/useGetImageSetter'
 
 function TopBar() {
     const { t, i18n } = useTranslation()
@@ -20,12 +20,11 @@ function TopBar() {
     const closeMenu = () => setIsOpen(false)
 
     const listItems = useLanguageItems(listButtonStyles.iconFlag)
-    const { createTextBlock, deleteBlocksFromSlide, renamePresentation, saveDocumentToFile } = useAppActions()
+    const { createImageBlock, createTextBlock, deleteBlocksFromSlide, renamePresentation, saveDocumentToFile } = useAppActions()
 
     const onTitleChange: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         renamePresentation((event.target as HTMLInputElement).value)
     }
-
 
     const setTextBlock = () => {
         createTextBlock({
@@ -36,7 +35,7 @@ function TopBar() {
             content: ''
         })
     }
-    const setImage = getImageSetter
+
     const loadFromFile = useLoadFromFileEditor
 
     return (
@@ -79,7 +78,7 @@ function TopBar() {
                     labelId={uuid()}
                     className={buttonStyles.addImageBlock}
                     inputType='file'
-                    action={setImage}
+                    action={(event) => handleImageUploadEvent(event, createImageBlock)}
                     text={t('addImageBlockPlaceholder')}
                     icon={{
                         path: 'src/assets/icon_add_image_block.svg',
