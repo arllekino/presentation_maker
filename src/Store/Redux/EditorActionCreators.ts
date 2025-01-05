@@ -1,3 +1,4 @@
+import { EditorType } from '../../Types/EditorType'
 import { ImageSlideObject, TextSlideObject } from '../../Types/SlideObjectTypes'
 import { ActionType } from './Action'
 import { CreateImageBlockPayload, CreateTextBlockPayload } from './PayloadTypes'
@@ -8,9 +9,17 @@ function createSlide() {
     }
 }
 
-function deleteSlide() {
+function setEditor(newEditor: EditorType) {
+    return {
+        type: ActionType.SET_EDITOR,
+        payload: { newEditor }
+    }
+}
+
+function deleteSlide(slideId: string) {
     return {
         type: ActionType.DELETE_SLIDE,
+        payload: { slideId }
     }
 }
 
@@ -174,6 +183,13 @@ function changeTextBlockFontColor(newFontColor: string) {
     }
 }
 
+function changeTextBlockFontWeight(newFontWeight: number) {
+    return {
+        type: ActionType.CHANGE_TEXT_BLOCK_FONT_WEIGHT,
+        payload: { newFontWeight }
+    }
+}
+
 function saveDocument() {
     return {
         type: ActionType.SAVE_DOCUMENT,
@@ -200,6 +216,7 @@ function loadDocumentFromJSON(editorJSON: string) {
 }
 
 export {
+    setEditor,
     createSlide,
     deleteSlide,
     selectSlide,
@@ -225,6 +242,7 @@ export {
     changeTextBlockFontFamily,
     changeTextBlockFontSize,
     changeTextBlockFontColor,
+    changeTextBlockFontWeight,
     saveDocument,
     saveDocumentToFile,
     getDocument,

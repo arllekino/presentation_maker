@@ -1,4 +1,4 @@
-import { useAppActions } from "../../Store/Hooks/useAppActions"
+import { useAppActions } from '../../Store/Hooks/useAppActions'
 
 function useGetColorBackgroundSetter(id: string | null): (event: React.ChangeEvent<HTMLInputElement>) => void {
     const {setBackgroundColorSlide} = useAppActions()

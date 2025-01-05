@@ -1,39 +1,48 @@
 import { EditorType } from '../../Types/EditorType'
+import { PresentationType } from '../../Types/PresentationType';
 import { SlideType } from '../../Types/SlideType'
 import { v4 as uuid } from 'uuid'
 
 function createSlide(editor: EditorType): EditorType {
-    const defaultBackgroundColor = '#FFFFFF'
-    
+    const defaultBackgroundColor = '#FFFFFF';
+
     const newSlide: SlideType = {
         id: uuid(),
         background: {
             hexColor: defaultBackgroundColor,
             type: 'color',
         },
-        blocks: []
-    }
+        blocks: [],
+    };
 
-    const newPresentation = { ...editor.presentation }
+    const newListSlides: Map<string, SlideType> = new Map(editor.presentation.listSlides)
+    newListSlides.set(newSlide.id, newSlide)
 
-    newPresentation.listSlides.set(newSlide.id, newSlide)
-    newPresentation.orderedSlideIds.push(newSlide.id)
+    const newPresentation = {
+        ...editor.presentation,
+        listSlides: newListSlides,
+        orderedSlideIds: [...editor.presentation.orderedSlideIds, newSlide.id],
+    };
 
-    
     return {
         ...editor,
         presentation: newPresentation,
-        selectedSlideId: newSlide.id
-    }
+        selectedSlideId: newSlide.id,
+    };
 }
 
-function deleteSlide(editor: EditorType, {slideId}: {slideId: string}): EditorType {
-    const modPresentation = { ...editor.presentation }
+
+function deleteSlide(editor: EditorType, { slideId }: { slideId: string }): EditorType {
+    const modPresentation: PresentationType = {
+        ...editor.presentation,
+        listSlides: new Map(editor.presentation.listSlides)
+    }
     const currentSlideIndex = modPresentation.orderedSlideIds.indexOf(slideId)
 
     modPresentation.listSlides.delete(slideId)
+    modPresentation.orderedSlideIds = modPresentation.orderedSlideIds.filter(id => id != slideId)
 
-    const newCurrentSlideId = modPresentation.orderedSlideIds[currentSlideIndex + 1] ?? modPresentation.orderedSlideIds[currentSlideIndex - 1]
+    const newCurrentSlideId = modPresentation.orderedSlideIds[currentSlideIndex] ?? modPresentation.orderedSlideIds[currentSlideIndex - 1]
 
     return {
         ...editor,
@@ -57,7 +66,7 @@ function selectSlide(editor: EditorType, { slideId }: { slideId: string }): Edit
 }
 
 function changeSlidePosition(editor: EditorType, { id, newPosition }: { id: string, newPosition: number }): EditorType {
-    const orderedSlideIds = editor.presentation.orderedSlideIds
+    const orderedSlideIds = [...editor.presentation.orderedSlideIds]
     const indexSlide = orderedSlideIds.indexOf(id)
 
     orderedSlideIds.splice(indexSlide, 1)

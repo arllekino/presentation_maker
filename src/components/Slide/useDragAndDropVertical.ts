@@ -1,11 +1,10 @@
 import React, { RefObject } from 'react'
-import { useAppActions } from './useAppActions'
+import { useAppActions } from '../../Store/Hooks/useAppActions'
 
 type ElementProperties = {
     value: HTMLElement,
     index: number
 }
-
 
 function useDraggableVertical(orderedSlideIds: string[], listSlides: RefObject<HTMLDivElement>) {
     const { changeSlidePosition } = useAppActions()
@@ -44,13 +43,11 @@ function useDraggableVertical(orderedSlideIds: string[], listSlides: RefObject<H
             element.value.style.position = ''
             element.value.style.zIndex = ''
             element.value.style.top = ''
-
         }
 
         window.removeEventListener('mousemove', handleMouseMove)
         window.removeEventListener('mouseup', handleMouseUp)
     }
-
 
     return handleMouseDown
 }

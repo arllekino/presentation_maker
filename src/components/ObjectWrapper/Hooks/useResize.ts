@@ -1,5 +1,7 @@
 import { RefObject } from 'react'
-import { useAppActions } from './useAppActions'
+import { useAppActions } from '../../../Store/Hooks/useAppActions'
+import { Size } from '../../../Utils/LocationTypes/Size'
+import { Position } from '../../../Utils/LocationTypes/Position'
 
 enum PointType {
     topLeft,
@@ -12,16 +14,6 @@ enum PointType {
     left
 }
 
-type Position = {
-    x: number
-    y: number
-}
-
-type Size = {
-    width: number,
-    height: number
-}
-
 type PointProps = {
     block: RefObject<HTMLDivElement>
     type: PointType
@@ -30,7 +22,7 @@ type PointProps = {
 function useResize(block: RefObject<HTMLDivElement>, isFixed: boolean, point: PointProps) {
     const {changeBlockPosition, resizeBlock} = useAppActions()
 
-    const minSize: Size = {width: 50, height: 50}
+    const minSize: Size = {width: 20, height: 20}
     const startPos: Position = { x: 0, y: 0 }
     const startSize: Size = {width: 0, height: 0}
    

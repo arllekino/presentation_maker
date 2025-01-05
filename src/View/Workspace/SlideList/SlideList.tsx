@@ -2,12 +2,12 @@ import styles from './SlideList.module.css'
 import { useTranslation } from 'react-i18next'
 import Slide from '../../../components/Slide/Slide'
 import { DefaultSlideSetting } from '../../../Utils/DefaultSlideSettings'
-import React, { useRef, useState } from 'react'
-import useDraggableVertical from '../../../Store/Hooks/useDragAndDropVertical'
+import React, { useEffect, useRef, useState } from 'react'
 import ListButton, { ListItem } from '../../../components/ListButton/ListButton'
 import listButtonStyles from '../../../components/ListButton/ListButton.module.css'
-import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
 import { useAppActions } from '../../../Store/Hooks/useAppActions'
+import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
+import useDraggableVertical from '../../../components/Slide/useDragAndDropVertical'
 
 function SlideList() {
 	const { t, i18n, } = useTranslation()
@@ -20,29 +20,41 @@ function SlideList() {
 	const orderedSlideIds = useAppSelector((state => state.presentation.orderedSlideIds))
 	const currentSlideId = useAppSelector((state => state.selectedSlideId))
 	const handleMouseDown = useDraggableVertical(orderedSlideIds, slideList)
+	const currentSlideRef = useRef<HTMLDivElement | null>(null);
 
-	const deleteItem: ListItem = {
-		text: t('deleteSlide'),
-		action: deleteSlide,
-		icon: {
-			path: 'src/Assets/icon_trash.svg',
-			className: listButtonStyles.deleteSlideIcon
+	useEffect(() => {
+		if (currentSlideRef.current) {
+			currentSlideRef.current.scrollIntoView({
+				behavior: 'smooth',
+				block: 'center',
+			})
 		}
-	}
-
-	const listItems: ListItem[] = [deleteItem]
+	}, [currentSlideId]);
 
 	return (
 		<>
 			<div className={styles.slideList} ref={slideList}>
 				{orderedSlideIds.map((slideId, index) => {
+					const isCurrent = slideId == currentSlideId
 					const onRightMouseClick = (event: React.MouseEvent<HTMLDivElement>) => {
 						event.preventDefault()
 						setSlideIdMenuOpen(slideId)
 					}
 
+					const deleteItem: ListItem = {
+						text: t('deleteSlide'),
+						action: () => { deleteSlide(slideId) },
+						className: '',
+						icon: {
+							path: 'src/Assets/icon_trash.svg',
+							className: listButtonStyles.deleteSlideIcon
+						}
+					}
+
+					const listItems: ListItem[] = [deleteItem]
+
 					const stylesPreviewWrap: React.CSSProperties = {
-						outline: `${slideId == currentSlideId ? '2px solid #3B82FA' : '1px solid #BABABA'}`
+						outline: `${isCurrent ? '2px solid #3B82FA' : '1px solid #BABABA'}`
 					}
 
 					return (
@@ -52,6 +64,8 @@ function SlideList() {
 								onClick={() => selectSlide(slideId)}
 								onMouseDown={handleMouseDown}
 								onContextMenu={onRightMouseClick}
+								ref={isCurrent ? currentSlideRef : null}
+
 							>
 								<span className={styles.slideIndex}>
 									{i18n.language == 'ar' ? toArabicNumber(index + 1) : index + 1}
@@ -65,6 +79,7 @@ function SlideList() {
 
 								{slideIdMenuOpen == slideId && (
 									<ListButton
+										menuClassName=''
 										className={listButtonStyles.menuSlide}
 										action={() => { }}
 										onClose={() => setSlideIdMenuOpen('')}

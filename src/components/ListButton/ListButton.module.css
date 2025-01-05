@@ -1,15 +1,16 @@
-/* .listButton {
-} */
+.listButton {
+    position: relative;
+}
 
 .menu {
     position: absolute;
     inline-size: 125px;
     padding: 5px;
-    z-index: 1000;
+    z-index: 100000;
 
     background-color: #FFFFFF;
-    box-shadow: 0 0 5px 5px #F1F1F2;
-    border-radius: 5px;
+    box-shadow: 0 0 2px 2px #F1F1F2;
+    border-radius: 4px;
     opacity: 0;
     transform: translateY(-10px);
     visibility: hidden;
@@ -56,4 +57,97 @@
 
 .menuSlide {
     position: absolute;
+}
+
+.fontWeightThin {
+    font-weight: 100;
+}
+
+.fontWeightExtraLight {
+    font-weight: 200;
+}
+
+.fontWeightLight {
+    font-weight: 300;
+}
+
+.fontWeightRegular {
+    font-weight: 400;
+}
+
+.fontWeightMedium {
+    font-weight: 500;
+}
+
+.fontWeightSemiBold {
+    font-weight: 600;
+}
+
+.fontWeightBold {
+    font-weight: 700;
+}
+
+.fontWeightExtraBold {
+    font-weight: 800;
+}
+
+.fontWeightBlack {
+    font-weight: 900;
+}
+
+.fontFamilyArial {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.fontFamilyVerdana {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.fontFamilyTimesNewRoman {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.fontFamilyGeorgia {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.fontFamilyCourierNew {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.fontFamilyTrebuchetMS {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.fontFamilyImpact {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.fontFamilyFranklinGothicMedium {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.textStyleTitle {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.textStyleHeadline {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.textStyleSubheadline {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.textStyleNormalText {
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.textStyleSmallText{
+    font-size: 11px;
+    font-weight: 400;
 }

@@ -6,6 +6,8 @@ import { v4 as uuid } from 'uuid'
 type ListItem = {
     text: string,
     action: () => void,
+    className: string,
+    payload?: object,
     icon?: {
         path: string,
         className: string
@@ -14,6 +16,7 @@ type ListItem = {
 
 type ButtonProps = {
     className: string
+    menuClassName: string
     action: () => void
     onClose: () => void
     text?: string
@@ -21,7 +24,7 @@ type ButtonProps = {
     isOpen: boolean
     style?: React.CSSProperties
     icon?: {
-        path: string,
+        path: string
         className: string
     }
 }
@@ -50,19 +53,19 @@ function ListButton(props: ButtonProps) {
                 icon={props.icon}
                 text={props.text}
             />
-            <nav className={`${styles.menu} ${props.isOpen ? styles.active : ''}`}>
+            <nav className={`${styles.menu} ${props.menuClassName} ${props.isOpen ? styles.active : ''}`}>
                 <ul className={styles.list}>
                     {props.listItem.map((item) => {
                         return (
                             <li
                                 key={uuid()}
-                                className={styles.item}
+                                className={`${styles.item} ${item.className}`}
                                 onClick={() =>{
                                     item.action()
                                     props.onClose()
                                 }}
                             >
-                                {item.icon != undefined && <img src={item.icon.path} className={item.icon.className} />}
+                                {item.icon && <img src={item.icon.path} className={item.icon.className} />}
                                 {item.text}
                             </li>
                         )

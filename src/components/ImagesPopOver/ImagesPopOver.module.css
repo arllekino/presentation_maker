@@ -1,0 +1,103 @@
+.popOverButton {
+    position: relative;
+}
+
+.popOver {
+    position: absolute;
+    inline-size: 125px;
+    padding: 5px;
+    z-index: 100000;
+    margin-top: 25px;
+    background-color: #F1F1F1;
+    box-shadow: 0 0 1.5px 2px #F1F1F2;
+    border-radius: 3px;
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    transition: 0.3s;
+    width: 600px;
+    margin-left: -270px;
+}
+
+.popOver.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.item {
+    max-height: 140px;
+}
+
+.item:hover {
+    cursor: pointer;
+}
+
+.itemWrapper {
+    display: inline-flex;
+    justify-content: space-between;
+    margin-right: 5px;
+    gap: 10px;
+}
+
+.inputSearch {
+    block-size: 13px;
+    padding: 5px;
+    color: #303030;
+    background-color: azure;
+    border: 0;
+    outline: 1px solid #D1D1D1;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'Montserrat', 'Tajawal', sans-serif;
+    font-weight: 600;
+}
+
+.inputSearch::placeholder {
+    font-weight: 300;
+}
+
+.inputSearch:active,
+:hover,
+:focus {
+    outline-offset: 0;
+}
+
+.inputSearch:focus {
+    outline: 2px solid #3b82fa;
+}
+
+.arrowLeft {
+    scale: -1;
+}
+
+.pageNum {
+    margin: 0 -5px;
+    padding-top: 3px;
+    font-family: 'Montserrat', 'Tajawal', sans-serif;
+    color: #303030;
+    font-size: 20px;
+    font-weight: 600;
+    min-width: 25px;
+    text-align: center;
+}
+
+.panelBar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+    padding-bottom: 7px;
+}
+
+.arrowLeftButton {
+    padding-top: -5px;
+}
+
+.arrowRightButton {
+    padding-top: 3px;
+}
+
+.navigation {
+    display: flex;
+}

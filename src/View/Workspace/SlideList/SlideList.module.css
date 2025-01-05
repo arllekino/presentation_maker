@@ -35,13 +35,14 @@
 	align-items: center;
 	padding: 1px;
 	user-select: none;
+	position: relative;
 }
 
 .previewWrap {
 	padding: 1px;
 	background-color: #FFFFFF;
 	pointer-events: none;
-	border-radius: 10px;
+	border-radius: 5px;
 	overflow: hidden;
 }
 

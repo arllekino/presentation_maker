@@ -1,5 +1,6 @@
 .wrapper {
     position: absolute;
+    cursor: grab;
     outline-color: #3B82FA;
 }
 

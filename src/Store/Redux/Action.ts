@@ -1,6 +1,14 @@
+import { EditorType } from "../../Types/EditorType"
 import { ImageSlideObject, TextSlideObject } from "../../Types/SlideObjectTypes"
 import { ActionType } from "./ActionType"
 import { CreateImageBlockPayload, CreateTextBlockPayload } from "./PayloadTypes"
+
+type SetEditorAction = {
+    type: ActionType.SET_EDITOR,
+    payload: {
+        newEditor: EditorType
+    }
+}
 
 type CreateSlideAction = {
     type: ActionType.CREATE_SLIDE
@@ -174,6 +182,13 @@ type ChangeTextBlockFontColorAction = {
     }
 }
 
+type ChangeTextBlockFontWeightAction = {
+    type: ActionType.CHANGE_TEXT_BLOCK_FONT_WEIGHT,
+    payload: {
+        newFontWeight: number
+    }
+}
+
 type SaveDocumentAction = {
     type: ActionType.SAVE_DOCUMENT
 }
@@ -194,6 +209,7 @@ type LoadDocumentFromJSON = {
 }
 
 type EditorAction =
+    | SetEditorAction
     | CreateSlideAction
     | DeleteSlideAction
     | SelectSlideAction
@@ -219,6 +235,7 @@ type EditorAction =
     | ChangeTextBlockFontFamilyAction
     | ChangeTextBlockFontSizeAction
     | ChangeTextBlockFontColorAction
+    | ChangeTextBlockFontWeightAction
     | SaveDocumentAction
     | SaveDocumentToFileAction
     | GetDocumentAction

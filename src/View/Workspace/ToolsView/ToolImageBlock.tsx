@@ -6,6 +6,7 @@ import { v4 as uuid } from 'uuid'
 import useGetImageReplacer from '../../../Utils/InputSet/useGetImageReplacer'
 import { useAppActions } from '../../../Store/Hooks/useAppActions'
 import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
+import { useState } from 'react'
 
 
 function ToolImageBlock() {
@@ -14,7 +15,9 @@ function ToolImageBlock() {
     const selectedSlideId = useAppSelector((state => state.selectedSlideId))
     const selectedBlockIds = useAppSelector((state => state.selectedBlockIds))
     const presentation = useAppSelector((state => state.presentation))
-    
+
+    const [isSizePositionToolOpen, setIsSizePositionToolOpen] = useState(false)
+
     if (!selectedSlideId || selectedBlockIds.length != 1) {
         return
     }
@@ -48,6 +51,11 @@ function ToolImageBlock() {
         useGetImageReplacer(slideObject.id)
     }
 
+    const chevronStyle: React.CSSProperties = {
+        transition: 'transform 0.5s ease',
+        transform: `rotate(${isSizePositionToolOpen ? '0deg' : '-90deg'})`,
+    };
+
     return (
         <>
             <div className={styles.toolTitleArea}>
@@ -56,20 +64,80 @@ function ToolImageBlock() {
 
             <div className={styles.toolMain}>
 
-                <div className={styles.toolTextArea}>
-                    <span className={styles.toolSubtitle}>
-                        {t('sizeAndPosition')}
-                        <img
-                            src={slideObject.isFixed
-                                ? 'src/Assets/icon_locked.svg'
-                                : 'src/Assets/icon_unlocked.svg'
-                            }
-                            alt=''
-                            className={styles.iconLock}
-                            onClick={onClickLock}
-                        />
-                    </span>
-                    <img src='src/Assets/icon_chevron_right.svg' alt='' className={styles.iconTextAreaChevron} />
+            <div className={styles.toolElementArea}>
+                    <div className={styles.toolTextArea}>
+                        <span className={styles.toolSubtitle}>
+                            {t('sizeAndPosition')}
+                            <img
+                                src={slideObject.isFixed
+                                    ? 'src/Assets/icon_locked.svg'
+                                    : 'src/Assets/icon_unlocked.svg'
+                                }
+                                alt=''
+                                className={styles.iconLock}
+                                onClick={onClickLock}
+                            />
+                        </span>
+
+                        <div className={styles.wrapperIconTextAreaChevron}>
+                            <img
+                                className={styles.iconTextAreaChevron}
+                                style={chevronStyle}
+                                src='src/Assets/icon_chevron_bottom.svg'
+                                alt=''
+                                onClick={() => setIsSizePositionToolOpen(!isSizePositionToolOpen)}
+                            />
+                        </div>
+                    </div>
+
+                    {isSizePositionToolOpen && (
+                        <div className={styles.sizePositionUtils}>
+                            <ButtonInput
+                                labelId={uuid()}
+                                className={'asd'}
+                                action={() => { }}
+                                inputType='number'
+                                text='W'
+                            />
+
+                            <ButtonInput
+                                labelId={uuid()}
+                                className={'asd'}
+                                action={() => { }}
+                                inputType='number'
+                                text='H'
+                            />
+
+                            <ButtonInput
+                                labelId={uuid()}
+                                className={'asd'}
+                                action={() => { }}
+                                inputType='number'
+                                text='X'
+                            />
+
+                            <ButtonInput
+                                labelId={uuid()}
+                                className={'asd'}
+                                action={() => { }}
+                                inputType='number'
+                                text='Y'
+                            />
+
+                            <ButtonInput
+                                labelId={uuid()}
+                                className={'asd'}
+                                action={() => { }}
+                                inputType='number'
+                                icon={{
+                                    path: 'asd',
+                                    className: 'sdf'
+
+                                }}
+                            />
+
+                        </div>
+                    )}
                 </div>
 
                 <div className={styles.toolUtilsArea}>
@@ -82,16 +150,6 @@ function ToolImageBlock() {
                             inputType={'file'}
                         />
                     </div>
-                </div>
-                <div className={styles.toolUtilsArea}>
-                    <span className={styles.toolSubtitle}>
-                        {t('font')}
-                    </span>
-                </div>
-                <div className={styles.toolUtilsArea}>
-                    <span className={styles.toolSubtitle}>
-                        {t('textAlignment')}
-                    </span>
                 </div>
                 <div className={styles.toolUtilsArea}>
                     <span className={styles.toolSubtitle}>

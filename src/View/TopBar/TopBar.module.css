@@ -1,7 +1,9 @@
 .topBar {
     background-color: #FCFCFD;
-    padding: 10px 15px 10px 15px;
+    padding: 10px 15px;
     display: flex;
+    position: relative;
+    z-index: 100000;
 }
 
 .title {
@@ -32,4 +34,15 @@
 .utils {
     display: flex;
     align-items: center;
+}
+
+/* .iconIMgaeLoupe {
+    width: 30px;
+    height: 30px;
+} */
+
+.imagesPopOver {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }

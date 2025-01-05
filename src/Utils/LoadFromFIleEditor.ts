@@ -1,7 +1,7 @@
-import { useAppActions } from '../Store/Hooks/useAppActions'
+import { useAppActions } from "../Store/Hooks/useAppActions"
 
 const useLoadFromFileEditor = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { loadDocumentFromJSON } = useAppActions() // Place the hook call here
+    const { loadDocumentFromJSON } = useAppActions()
     const target = event.target as HTMLInputElement
     const file = target.files?.[0]
 
@@ -18,13 +18,13 @@ const useLoadFromFileEditor = (event: React.ChangeEvent<HTMLInputElement>) => {
                 }
             }
 
-            event.target.value = '' // Clear the input value
+            event.target.value = ''
 
             fileReader.readAsText(file)
         }
     }
 
-    loadFile() // Call the async function here
+    loadFile()
 }
 
 export default useLoadFromFileEditor

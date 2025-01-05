@@ -17,9 +17,6 @@ i18next
     interpolation: {
       escapeValue: false,
     },
-  });
-
-console.log(i18next);
-
+  })
 
 export default i18next;

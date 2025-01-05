@@ -4,7 +4,7 @@ import isEditorValid from '../../Utils/Validation/ValidateEditor'
 import { createEditor } from './PresentationFunctions'
 
 function saveDocument(editor: EditorType): EditorType {
-    localStorage.clear()
+    localStorage.removeItem(DefaultSlideSetting.localStorageItemName)
     
     const listSlidesObject = Object.fromEntries(editor.presentation.listSlides)
 
@@ -18,7 +18,7 @@ function saveDocument(editor: EditorType): EditorType {
     
     if (isEditorValid(editor)) {
         const editorJSON = JSON.stringify(editorCopy)
-        localStorage.setItem('editor', editorJSON)
+        localStorage.setItem(DefaultSlideSetting.localStorageItemName, editorJSON)
     }
 
     return editor
@@ -52,21 +52,21 @@ function saveDocumentToFile(editor: EditorType): EditorType {
 }
 
 function getDocument(): EditorType {
-    const editorJSON = localStorage.getItem('editor')
+    const editorJSON = localStorage.getItem(DefaultSlideSetting.localStorageItemName)
     if (editorJSON == null) {
         return createEditor()
     }
 
     let editor
     try {
-        editor = JSON.parse(editorJSON);
+        editor = JSON.parse(editorJSON)
     } catch (error) {
         console.error('Не удалось открыть автосохранненый файл', error)
         return createEditor()
     }
 
     if (editor.presentation && typeof editor.presentation.listSlides == 'object') {
-        editor.presentation.listSlides = new Map(Object.entries(editor.presentation.listSlides))
+        editor.presentation.listSlides = new Map(Object.entries(editor.presentation.listSlides))        
     }
 
     if (!isEditorValid(editor)) {

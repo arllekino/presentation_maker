@@ -1,5 +1,5 @@
-import { convertImageToBase64 } from "../ImageUtils"
-import { useAppActions } from "../../Store/Hooks/useAppActions"
+import { useAppActions } from '../../Store/Hooks/useAppActions'
+import { convertImageToBase64 } from '../ImageUtils'
 
 function useGetImageBackgroundSetter(id: string | null): (event: React.ChangeEvent<HTMLInputElement>) => void {
     const { setBackgroundImageSlide } = useAppActions()

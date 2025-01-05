@@ -3,9 +3,9 @@ import { ImageSlideObject, TextSlideObject } from '../../Types/SlideObjectTypes'
 import TextBlock from '../TextBlock/TextBlock'
 import ImageBlock from '../ImageBlock/ImageBlock'
 import React, { useEffect, useRef, useState } from 'react'
-import useDragAndDrop from '../../Store/Hooks/useDragAndDrop'
-import useResize, { PointType } from '../../Store/Hooks/useResize'
 import { useAppActions } from '../../Store/Hooks/useAppActions'
+import useDragAndDrop from './Hooks/useDragAndDrop'
+import useResize, { PointType } from './Hooks/useResize'
 
 type ObjectWrapperProps = {
     slideObject: TextSlideObject | ImageSlideObject
@@ -103,6 +103,7 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
         marginTop: slideObject.coordinates.y * (scale ?? 1),
         width: slideObject.size.width * (scale ?? 1),
         height: slideObject.size.height * (scale ?? 1),
+        zIndex: slideObject.overlayPriority,
         outlineWidth: isSelected ? (scale ? '1px' : '2px') : 0,
         outlineStyle: 'solid',
     }
@@ -181,20 +182,20 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
                 </>
             )}
 
-            {slideObject.type === 'text_block' ? (
+            {slideObject.type == 'text_block' ? (
                 <TextBlock
                     key={slideObject.id}
                     textSlideObject={slideObject}
                     scale={scale}
                 />
-            ) : slideObject.type === 'image_block' ? (
+            ) : slideObject.type == 'image_block' ? (
                 <ImageBlock
                     key={slideObject.id}
                     imageSlideObject={slideObject}
                     scale={scale}
                 />
-            ) : (<div>
-            </div>)}
+            ) : (<div></div>)
+            }
         </div>
     )
 }

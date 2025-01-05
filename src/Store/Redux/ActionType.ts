@@ -1,4 +1,5 @@
 enum ActionType {
+    SET_EDITOR = 'setEditor',
     CREATE_SLIDE = 'createSlide',
     DELETE_SLIDE = 'deleteSlide',
     CREATE_TEXT_BLOCK = 'createTextBlock',
@@ -26,6 +27,7 @@ enum ActionType {
     CHANGE_TEXT_BLOCK_FONT_FAMILY = 'changeTextBlockFontFamily',
     CHANGE_TEXT_BLOCK_FONT_SIZE = 'changeTextBlockFontSize',
     CHANGE_TEXT_BLOCK_FONT_COLOR = 'changeTextBlockFontColor',
+    CHANGE_TEXT_BLOCK_FONT_WEIGHT = 'changeTextBlockFontWeight',
     SAVE_DOCUMENT = 'saveDocument',
     SAVE_DOCUMENT_TO_FILE = 'saveDocumentToFile',
     GET_DOCUMENT = 'getDocument',

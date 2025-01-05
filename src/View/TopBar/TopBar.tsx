@@ -1,26 +1,101 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '../../components/Button/Button'
+import popOverStyles from '../../components/ImagesPopOver/ImagesPopOver.module.css'
 import styles from './TopBar.module.css'
 import buttonStyles from '../../components/Button/Button.module.css'
 import ListButton from '../../components/ListButton/ListButton'
 import listButtonStyles from '../../components/ListButton/ListButton.module.css'
 import ButtonInput from '../../components/Button/ButtonInput'
-import useLanguageItems from '../../Utils/ListItems/LanguageItems'
+import useLanguageItems from '../../components/ListButton/Lists/LanguageItems'
 import { v4 as uuid } from 'uuid'
 import useLoadFromFileEditor from '../../Utils/LoadFromFIleEditor'
-import { useAppActions } from '../../Store/Hooks/useAppActions'
 import handleImageUploadEvent from '../../Utils/InputSet/useGetImageSetter'
+import { useAppActions } from '../../Store/Hooks/useAppActions'
+import { HistoryContext } from '../../components/ObjectWrapper/Hooks/HistoryContext'
+import { useSelector } from 'react-redux'
+import { useAppSelector } from '../../Store/Hooks/useAppSelector'
+import { useConvertPresentationToPdf } from '../../Utils/PDF/useConvertPresentationToPdf'
+import { getUnsplashImages } from '../../Services/GetUnsplashImages'
+import { ImagesPopOver } from '../../components/ImagesPopOver/ImagesPopOver'
+import { UnsplashImageType } from '../../Services/UnsplahImageType'
+import { useCreatePopOverImagesFromUnsplash } from '../../Utils/CreatePopOverImagesFromUnsplash'
 
 function TopBar() {
     const { t, i18n } = useTranslation()
 
-    const [isOpen, setIsOpen] = useState(false)
-    const toggleMenu = () => setIsOpen(!isOpen)
-    const closeMenu = () => setIsOpen(false)
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+    const closeMenu = () => setIsMenuOpen(false)
+
+    const [searchValue, setSearchValue] = useState('')
+    const [page, setPage] = useState(1)
+    const [images, setImages] = useState<UnsplashImageType[] | undefined>(undefined)
+    const [isPopOverImagesOpen, setIsPopOverImagesOpen] = useState(false)
+    const togglePopOverImages = () => setIsPopOverImagesOpen(!isPopOverImagesOpen)
+    const closePopOverImages = () => setIsPopOverImagesOpen(false)
 
     const listItems = useLanguageItems(listButtonStyles.iconFlag)
-    const { createImageBlock, createTextBlock, deleteBlocksFromSlide, renamePresentation, saveDocumentToFile } = useAppActions()
+    const {
+        setEditor,
+        createImageBlock,
+        createTextBlock,
+        deleteBlocksFromSlide,
+        renamePresentation,
+        saveDocumentToFile
+    } = useAppActions()
+    const presentationTitle = useAppSelector((state => state.presentation.title))
+
+    const history = React.useContext(HistoryContext)
+    const undoStackSize = useSelector(() => history.undoStackSize())
+    const redoStackSize = useSelector(() => history.redoStackSize())
+
+    const onUndo = () => {
+        const newEditor = history.undo()
+        if (newEditor && history.undoStackSize()) {
+            setEditor(newEditor)
+        }
+    }
+
+    const onRedo = () => {
+        const newEditor = history.redo()
+        if (newEditor && history.redoStackSize()) {
+            setEditor(newEditor)
+        }
+    }
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            const isRedo = (event.ctrlKey || event.metaKey) && (event.key == 'y' || event.key == 'н')
+            const isUndo = (event.ctrlKey || event.metaKey) && (event.key == 'z' || event.key == 'я')
+
+            if (isRedo) {
+                event.preventDefault()
+                onRedo()
+            }
+            if (isUndo) {
+                event.preventDefault()
+                onUndo()
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+        }
+    })
+
+    useEffect(() => {
+        const fetchImages = async () => {
+            const result = await getUnsplashImages(searchValue, page)
+            setImages(result || [])
+        }
+    
+        if (isPopOverImagesOpen) {
+            fetchImages()
+        }
+    }, [searchValue, isPopOverImagesOpen, page])
+    
 
     const onTitleChange: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         renamePresentation((event.target as HTMLInputElement).value)
@@ -36,32 +111,43 @@ function TopBar() {
         })
     }
 
+    const generatePdf = useConvertPresentationToPdf(presentationTitle)
+    const handlePdfExport = async () => {
+        await generatePdf()
+    }
+
     const loadFromFile = useLoadFromFileEditor
 
     return (
         <div className={styles.topBar}>
-            <input type='text' className={styles.title} placeholder={t('presentationTitlePlaceholder')} onChange={onTitleChange} />
+            <ButtonInput
+                labelId={uuid()}
+                className={styles.title}
+                action={onTitleChange}
+                inputType='text'
+                value={presentationTitle}
+                placeholder={t('presentationTitlePlaceholder')}
+            />
 
-            {/* <div className={buttonStyles.actionLog}>
+            <div className={buttonStyles.actionLog}>
                 <Button
                     className={buttonStyles.undo}
-                    action={someAction}
+                    action={onUndo}
                     icon={{
                         path: '/src/assets/icon_undo.svg',
-                        className: buttonStyles.iconUndo,
+                        className: `${buttonStyles.iconUndo} ${!undoStackSize ? buttonStyles.iconUndoEmpty : ''}`,
                     }}
                 />
 
                 <Button
                     className={buttonStyles.redo}
-                    action={someAction}
+                    action={onRedo}
                     icon={{
                         path: '/src/assets/icon_redo.svg',
-                        className: buttonStyles.iconRedo,
+                        className: `${buttonStyles.iconRedo} ${!redoStackSize ? buttonStyles.iconRedoEmpty : ''}`,
                     }}
                 />
-            </div> */}
-
+            </div>
 
             <div className={buttonStyles.addItem}>
                 <Button
@@ -86,6 +172,33 @@ function TopBar() {
                     }}
                 />
 
+                <ImagesPopOver
+                    className={styles.imagesPopOver}
+                    itemClassName={popOverStyles.item}
+                    action={async () => {
+                        let images: UnsplashImageType[] | undefined
+                        await getUnsplashImages(searchValue, page).then(result => images = result)
+                        setImages(images)
+                    }}
+                    toggle={togglePopOverImages}
+                    onClose={closePopOverImages}
+                    isOpen={isPopOverImagesOpen}
+                    images={useCreatePopOverImagesFromUnsplash(images)}
+                    text='Загрузить с интернета'
+                    icon={{
+                        path: 'src/Assets/icon_image_loupe.svg',
+                        className: styles.iconIMgaeLoupe
+                    }}
+                    search={{
+                        searchAction: setSearchValue,
+                        value: searchValue
+                    }}
+                    pageParams={{
+                        page: page,
+                        setPage: setPage
+                    }}
+                />
+
                 <Button
                     className={buttonStyles.deleteBlock}
                     action={deleteBlocksFromSlide}
@@ -98,6 +211,12 @@ function TopBar() {
             </div>
 
             <div className={styles.utils}>
+                <Button
+                    className=''
+                    action={handlePdfExport}
+                    text={'To Pdf'}
+                />
+
                 <Button
                     className={styles.saveTofile}
                     action={saveDocumentToFile}
@@ -115,9 +234,10 @@ function TopBar() {
                 <div className={styles.languageWrap}>
                     <ListButton
                         className={buttonStyles.languageButton}
+                        menuClassName={buttonStyles.menuLanguageButton}
                         action={toggleMenu}
                         onClose={closeMenu}
-                        isOpen={isOpen}
+                        isOpen={isMenuOpen}
                         icon={{
                             path: getCurrentIconFlagPath(i18n.language),
                             className: buttonStyles.iconSettings,

@@ -6,6 +6,7 @@ type SlideObject = {
     overlayPriority: number
     border: Border | null
     isFixed: boolean
+    rotation: number
 }
 
 type ImageSlideObject = SlideObject & {
@@ -39,6 +40,7 @@ type Font = {
     family: string,
     size: number,
     hexColor: string,
+    weight: number
 }
 
 export type {

@@ -5,7 +5,9 @@ type ButtonProps = {
     className: string
     action: (e: React.ChangeEvent<HTMLInputElement>) => void
     text?: string
-    inputType: 'color' | 'file'
+    inputType: 'color' | 'file' | 'number' | 'text'
+    value?: string
+    placeholder?: string
     icon?: {
         path: string
         className: string
@@ -13,44 +15,64 @@ type ButtonProps = {
     }
 }
 
-function ButtonInput({ labelId, className, action, icon, text, inputType }: ButtonProps) {
+function ButtonInput(buttonProps: ButtonProps) {
     const iconStyles: React.CSSProperties = {
-        backgroundColor: icon?.color
+        backgroundColor: buttonProps.icon?.color
     }
 
     return (
-        <>
-            <label htmlFor={labelId} className={`${buttonStyles.labelButton} ${className}`}>
-                {text != undefined && (
-                    <span className={buttonStyles.text}>{text}</span>
+        <div className={buttonStyles.wrapper}>
+            {buttonProps.inputType != 'text' &&(<label htmlFor={buttonProps.labelId} className={`${buttonStyles.labelButton} ${buttonProps.className}`}>
+                {buttonProps.text != undefined && (
+                    <span className={buttonStyles.text}>{buttonProps.text}</span>
                 )}
-                {icon != undefined && inputType != 'color' && (
-                    <img src={icon.path} className={`${buttonStyles.defaultIcon} ${icon.className}`} style={iconStyles} alt="" />
+                {buttonProps.icon != undefined && buttonProps.inputType != 'color' && (
+                    <img src={buttonProps.icon.path} className={`${buttonStyles.defaultIcon} ${buttonProps.icon.className}`} style={iconStyles} alt="" />
                 )}
-                {icon != undefined && inputType == 'color' && (
-                    <span className={`${buttonStyles.defaultIcon} ${icon.className}`} style={iconStyles}></span>
+                {buttonProps.icon != undefined && buttonProps.inputType == 'color' && (
+                    <span className={`${buttonStyles.defaultIcon} ${buttonProps.icon.className}`} style={iconStyles}></span>
                 )}
-            </label>
-            {inputType == 'color' && (
+            </label>)}
+            {buttonProps.inputType == 'color' && (
                 <input
-                    type={inputType}
-                    id={labelId}
+                    type={buttonProps.inputType}
+                    id={buttonProps.labelId}
                     className={buttonStyles.inputColor}
-                    value={icon?.color}
-                    onChange={action}
+                    value={buttonProps.icon?.color}
+                    onInput={buttonProps.action}
                 />
             )}
 
-            {inputType == 'file' && (
+            {buttonProps.inputType == 'file' && (
                 <input
-                    type={inputType}
-                    id={labelId}
+                    type={buttonProps.inputType}
+                    id={buttonProps.labelId}
                     className={buttonStyles.inputFile}
-                    onInput={action}
+                    onInput={buttonProps.action}
                 />
-
             )}
-        </>
+
+            {buttonProps.inputType == 'number' && (
+                <input
+                    type={buttonProps.inputType}
+                    id={buttonProps.labelId}
+                    className={buttonStyles.inputText}
+                    value={buttonProps.value}
+                    onInput={buttonProps.action}
+                />
+            )}
+
+            {buttonProps.inputType == 'text' && (
+                <input
+                    type={buttonProps.inputType}
+                    id={buttonProps.labelId}
+                    className={buttonProps.className}
+                    value={buttonProps.value}
+                    onChange={buttonProps.action}
+                    placeholder={buttonProps.placeholder}
+                />
+            )}
+        </div>
     )
 }
 

@@ -17,10 +17,10 @@ function TextBlock({ textSlideObject, scale }: TextBlockProps) {
 
     const styleTextBlock: React.CSSProperties = {
         opacity: textSlideObject.opacity,
-        zIndex: textSlideObject.overlayPriority,
         fontFamily: textSlideObject.font.family,
         fontSize: textSlideObject.font.size * (scale ?? 1),
         color: textSlideObject.font.hexColor,
+        fontWeight: textSlideObject.font.weight,
         backgroundColor: textSlideObject.backgroundColor,
         borderWidth: textSlideObject.border?.width || 0,
         borderStyle: 'solid',
@@ -40,7 +40,7 @@ function TextBlock({ textSlideObject, scale }: TextBlockProps) {
             className={styles.textBlock}
             style={styleTextBlock}
             contentEditable={isContentEditable}
-            onDoubleClick={() => setIsContentEditable(true)}
+            onDoubleClick={() => setIsContentEditable(!isContentEditable)}
             onInput={handleInputChange}
             onBlur={handleBlur}
             suppressContentEditableWarning={true}

@@ -4,14 +4,18 @@ import App from './App.tsx'
 import './Utils/Localization/18n.ts'
 import { Provider } from 'react-redux'
 import { store } from './Store/Redux/Store.ts'
+import { StrictMode } from 'react'
+import { initHistory } from './Utils/History.ts'
 
 const root = createRoot(document.querySelector('#root')!)
 
 function render() {
     root.render(
-        <Provider store={store}>
-            <App />
-        </Provider>
+        <StrictMode>
+            <Provider store={store}>
+                <App history={initHistory(store)}/>
+            </Provider>
+        </StrictMode>
     )
 }
 

@@ -49,8 +49,13 @@ function renamePresentation(editor: EditorType, {newTitle}: {newTitle: string}):
     }
 }
 
+function setEditor({newEditor}: {newEditor: EditorType}): EditorType {
+    return newEditor
+}
+
 export {
     createEditor,
     createPresentation,
-    renamePresentation
+    renamePresentation,
+    setEditor
 }

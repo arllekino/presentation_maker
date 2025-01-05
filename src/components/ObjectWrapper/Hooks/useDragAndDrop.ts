@@ -1,36 +1,14 @@
 import { RefObject } from 'react'
-import { useAppActions } from './useAppActions'
+import { useAppActions } from '../../../Store/Hooks/useAppActions'
 
 function useDragAndDrop(
     block: RefObject<HTMLParagraphElement | HTMLDivElement>,
     blockId: string,
     isFixed: boolean
 ) {
-    let delta = { x: 0, y: 0 }
-
     const { unsetSelectionSlideObjects, changeBlockPosition } = useAppActions()
-
-    const handleMouseMove = ((e: MouseEvent) => {
-        if (block.current && block.current.parentElement) {
-            const x = e.clientX - delta.x - block.current.parentElement.getBoundingClientRect().x
-            const y = e.clientY - delta.y - block.current.parentElement.getBoundingClientRect().y
-
-            block.current.style.marginLeft = `${x}px`
-            block.current.style.marginTop = `${y}px`
-        }
-    })
-
-    const handleMouseUp = ((e: MouseEvent) => {
-        if (block.current && block.current.parentElement) {
-            const newX = e.clientX - block.current.parentElement.getBoundingClientRect().x - delta.x
-            const newY = e.clientY - block.current.parentElement.getBoundingClientRect().y - delta.y
-
-            changeBlockPosition(newX, newY)
-        }
-
-        window.removeEventListener('mousemove', handleMouseMove)
-        window.removeEventListener('mouseup', handleMouseUp)
-    })
+    
+    let delta = { x: 0, y: 0 }
 
     const handleMouseDown = ((e: React.MouseEvent<HTMLParagraphElement | HTMLDivElement>) => {
         if (block.current) {
@@ -60,6 +38,28 @@ function useDragAndDrop(
                 window.removeEventListener('mousedown', handleClickOutside)
             }
         }
+    })
+
+    const handleMouseMove = ((e: MouseEvent) => {
+        if (block.current && block.current.parentElement) {
+            const x = e.clientX - delta.x - block.current.parentElement.getBoundingClientRect().x
+            const y = e.clientY - delta.y - block.current.parentElement.getBoundingClientRect().y
+
+            block.current.style.marginLeft = `${x}px`
+            block.current.style.marginTop = `${y}px`
+        }
+    })
+
+    const handleMouseUp = ((e: MouseEvent) => {
+        if (block.current && block.current.parentElement) {
+            const newX = e.clientX - block.current.parentElement.getBoundingClientRect().x - delta.x
+            const newY = e.clientY - block.current.parentElement.getBoundingClientRect().y - delta.y
+
+            changeBlockPosition(newX, newY)
+        }
+
+        window.removeEventListener('mousemove', handleMouseMove)
+        window.removeEventListener('mouseup', handleMouseUp)
     })
 
     if (isFixed) {

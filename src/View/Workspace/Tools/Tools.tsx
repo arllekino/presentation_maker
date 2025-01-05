@@ -3,8 +3,8 @@ import ToolSlide from '../ToolsView/ToolSlide'
 import { ImageSlideObject, TextSlideObject } from '../../../Types/SlideObjectTypes'
 import ToolTextBlock from '../ToolsView/ToolTextBlock'
 import ToolImageBlock from '../ToolsView/ToolImageBlock'
-import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
 import { SlideType } from '../../../Types/SlideType'
+import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
 
 function Tools() {
     const selectedBlockIds = useAppSelector((state => state.selectedBlockIds))

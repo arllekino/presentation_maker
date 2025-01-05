@@ -3,6 +3,8 @@
     color: #303030;
     font-size: 14px;
     font-weight: 600;
+    min-width: 25px;
+    text-align: center;
 }
 
 .defaultButton {
@@ -144,4 +146,46 @@
 
 .addItem .text {
     font-weight: 500;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.inputText {
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    appearance: none;   
+    all: unset;
+    padding: 5px 10px;
+    font-family: 'Montserrat', 'Tajawal', sans-serif;
+    color: #3F4250;
+    font-weight: 500;
+    width: 40px;
+    border-radius: 5px;
+    border: 1px solid #E6E6E7;
+}
+
+.wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+.menuLanguageButton {
+    inset-inline-end: 0;
+}
+
+.iconRedoEmpty,
+.iconUndoEmpty {
+    opacity: 0.5;
+}
+
+.iconRedoEmpty:hover,
+.iconUndoEmpty:hover {
+    cursor: default;
+}
+
+.styles.fontColorSizeWeight {
+    display: flexbox;
 }

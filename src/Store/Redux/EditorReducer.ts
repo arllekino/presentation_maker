@@ -1,6 +1,6 @@
 import { EditorType } from '../../Types/EditorType'
 import { ActionType, EditorAction } from './Action'
-import { createEditor, renamePresentation } from '../Functions/PresentationFunctions.ts'
+import { createEditor, renamePresentation, setEditor } from '../Functions/PresentationFunctions.ts'
 import { getDocument, loadDocumentFromJSON, saveDocument, saveDocumentToFile } from '../Functions/DocumentFunctions.ts'
 import { changeSlidePosition, createSlide, deleteSlide, selectSlide, setBackgroundColorSlide, setBackgroundImageSlide } from '../Functions/SlideFunctions.ts'
 import {
@@ -22,13 +22,15 @@ import {
     unsetSelectedSlideObject,
     changeTextBlockFontColor,
     changeTextBlockFontFamily,
+    changeTextBlockFontWeight,
 } from '../Functions/SlideObjectsFunctions.ts'
 
 const initialState = getDocument() || createEditor()
 
 function editorReducer(editor = initialState, action: EditorAction): EditorType {
-   
     switch (action.type) {
+        case ActionType.SET_EDITOR:
+            return setEditor(action.payload)
         case ActionType.CREATE_SLIDE:
             return createSlide(editor)
         case ActionType.DELETE_SLIDE:
@@ -79,6 +81,8 @@ function editorReducer(editor = initialState, action: EditorAction): EditorType 
             return changeTextBlockFontSize(editor, action.payload)
         case ActionType.CHANGE_TEXT_BLOCK_FONT_COLOR:
             return changeTextBlockFontColor(editor, action.payload)
+        case ActionType.CHANGE_TEXT_BLOCK_FONT_WEIGHT:
+            return changeTextBlockFontWeight(editor, action.payload)
         case ActionType.SAVE_DOCUMENT:
             return saveDocument(editor)
         case ActionType.SAVE_DOCUMENT_TO_FILE:
