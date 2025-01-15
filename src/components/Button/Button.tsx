@@ -4,6 +4,7 @@ type ButtonProps = {
     className: string
     action: () => void
     text?: string
+    onRightClick?: () => void
     icon?: {
         path: string
         className: string

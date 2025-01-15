@@ -12,7 +12,7 @@ import { v4 as uuid } from 'uuid'
 import useLoadFromFileEditor from '../../Utils/LoadFromFIleEditor'
 import handleImageUploadEvent from '../../Utils/InputSet/useGetImageSetter'
 import { useAppActions } from '../../Store/Hooks/useAppActions'
-import { HistoryContext } from '../../components/ObjectWrapper/Hooks/HistoryContext'
+import { HistoryContext } from '../../Store/History/HistoryContext'
 import { useSelector } from 'react-redux'
 import { useAppSelector } from '../../Store/Hooks/useAppSelector'
 import { useConvertPresentationToPdf } from '../../Utils/PDF/useConvertPresentationToPdf'
@@ -20,6 +20,7 @@ import { getUnsplashImages } from '../../Services/GetUnsplashImages'
 import { ImagesPopOver } from '../../components/ImagesPopOver/ImagesPopOver'
 import { UnsplashImageType } from '../../Services/UnsplahImageType'
 import { useCreatePopOverImagesFromUnsplash } from '../../Utils/CreatePopOverImagesFromUnsplash'
+import { Link } from 'react-router'
 
 function TopBar() {
     const { t, i18n } = useTranslation()
@@ -42,10 +43,11 @@ function TopBar() {
         createTextBlock,
         deleteBlocksFromSlide,
         renamePresentation,
-        saveDocumentToFile
+        saveDocumentToFile,
+        unsetSelectionSlideObjects
     } = useAppActions()
     const presentationTitle = useAppSelector((state => state.presentation.title))
-
+    const currentBlockId = useAppSelector((state => state.selectedBlockIds[0]))
     const history = React.useContext(HistoryContext)
     const undoStackSize = useSelector(() => history.undoStackSize())
     const redoStackSize = useSelector(() => history.redoStackSize())
@@ -90,12 +92,12 @@ function TopBar() {
             const result = await getUnsplashImages(searchValue, page)
             setImages(result || [])
         }
-    
+
         if (isPopOverImagesOpen) {
             fetchImages()
         }
     }, [searchValue, isPopOverImagesOpen, page])
-    
+
 
     const onTitleChange: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         renamePresentation((event.target as HTMLInputElement).value)
@@ -118,6 +120,13 @@ function TopBar() {
 
     const loadFromFile = useLoadFromFileEditor
 
+    const handlePreviewPresentation = () => {
+        unsetSelectionSlideObjects(currentBlockId)
+        document.documentElement.requestFullscreen().catch(err => {
+            console.log(`Ошибка при попытке открыть полноэкранный режим: ${err.message} (${err.name})`);
+        })
+    }
+
     return (
         <div className={styles.topBar}>
             <ButtonInput
@@ -135,7 +144,7 @@ function TopBar() {
                     action={onUndo}
                     icon={{
                         path: '/src/assets/icon_undo.svg',
-                        className: `${buttonStyles.iconUndo} ${!undoStackSize ? buttonStyles.iconUndoEmpty : ''}`,
+                        className: `${buttonStyles.iconUndo} ${!undoStackSize ? buttonStyles.iconUndoEmpty : ''} ${i18n.language == 'ar' ? styles.iconRtl : ''}`,
                     }}
                 />
 
@@ -144,7 +153,7 @@ function TopBar() {
                     action={onRedo}
                     icon={{
                         path: '/src/assets/icon_redo.svg',
-                        className: `${buttonStyles.iconRedo} ${!redoStackSize ? buttonStyles.iconRedoEmpty : ''}`,
+                        className: `${buttonStyles.iconRedo} ${!redoStackSize ? buttonStyles.iconRedoEmpty : ''} ${i18n.language == 'ar' ? styles.iconRtl : ''}`,
                     }}
                 />
             </div>
@@ -184,7 +193,7 @@ function TopBar() {
                     onClose={closePopOverImages}
                     isOpen={isPopOverImagesOpen}
                     images={useCreatePopOverImagesFromUnsplash(images)}
-                    text='Загрузить с интернета'
+                    text={t('loadFromInternet')}
                     icon={{
                         path: 'src/Assets/icon_image_loupe.svg',
                         className: styles.iconIMgaeLoupe
@@ -212,24 +221,41 @@ function TopBar() {
 
             <div className={styles.utils}>
                 <Button
-                    className=''
+                    className={styles.saveAsPdf}
                     action={handlePdfExport}
-                    text={'To Pdf'}
+                    text={t('saveAsPdf')}
+                    icon={{
+                        path: 'src/Assets/icon_pdf.png',
+                        className: styles.iconPdf
+                    }}
                 />
 
                 <Button
                     className={styles.saveTofile}
                     action={saveDocumentToFile}
-                    text={'Save'}
+                    text={t('save')}
+                    icon={{
+                        path: 'src/Assets/icon_save.svg',
+                        className: ''
+                    }}
                 />
 
                 <ButtonInput
                     labelId={uuid()}
                     className={styles.loadFromFile}
                     action={loadFromFile}
-                    text={'Load'}
+                    text={t('load')}
                     inputType={'file'}
+                    icon={{
+                        path: 'src/Assets/icon_save.svg',
+                        className: styles.iconLoad
+                    }}
                 />
+
+                <Link to='/previewPresentation' onClick={handlePreviewPresentation} className={styles.playButton}>
+                    <img src="src/Assets/icon_play.png" className={styles.iconPlay} />
+                    <span className={styles.playSpan}>{t('play')}</span>
+                </Link>
 
                 <div className={styles.languageWrap}>
                     <ListButton

@@ -8,7 +8,7 @@ import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
 
 function Tools() {
     const selectedBlockIds = useAppSelector((state => state.selectedBlockIds))
-    const selectedSlideId = useAppSelector((state => state.selectedSlideId))
+    const selectedSlideId = useAppSelector((state => state.selectedSlideIds[0]))
     const selectedSlide: SlideType | undefined = useAppSelector((state => state.presentation.listSlides.get(selectedSlideId ?? '')))
 
     if (selectedSlideId == undefined) {

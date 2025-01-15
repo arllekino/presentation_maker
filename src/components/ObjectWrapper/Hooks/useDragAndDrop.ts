@@ -4,13 +4,18 @@ import { useAppActions } from '../../../Store/Hooks/useAppActions'
 function useDragAndDrop(
     block: RefObject<HTMLParagraphElement | HTMLDivElement>,
     blockId: string,
-    isFixed: boolean
+    isFixed: boolean,
 ) {
     const { unsetSelectionSlideObjects, changeBlockPosition } = useAppActions()
-    
+
     let delta = { x: 0, y: 0 }
 
     const handleMouseDown = ((e: React.MouseEvent<HTMLParagraphElement | HTMLDivElement>) => {
+        const currentPath = window.location.pathname
+        if (currentPath == '/previewPresentation') {
+            return
+        }
+
         if (block.current) {
             const currentBlock = block.current
             const parentElement = currentBlock.parentElement!
@@ -19,7 +24,15 @@ function useDragAndDrop(
                 if (!currentBlock.contains(e.target as Node) &&
                     parentElement.contains(e.target as Node)
                 ) {
-                    unsetSelectionSlideObjects(blockId)
+                    let isNoNeedToUnselect = false
+                    currentBlock.childNodes.forEach(element => {
+                        isNoNeedToUnselect = element.contains(e.target as Node)
+                        if (isNoNeedToUnselect) return
+                    })
+
+                    if (!isNoNeedToUnselect) {
+                        unsetSelectionSlideObjects(blockId)
+                    }
                 }
             }
 

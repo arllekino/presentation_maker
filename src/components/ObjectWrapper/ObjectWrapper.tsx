@@ -6,28 +6,44 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useAppActions } from '../../Store/Hooks/useAppActions'
 import useDragAndDrop from './Hooks/useDragAndDrop'
 import useResize, { PointType } from './Hooks/useResize'
+import { useRotate } from './Hooks/useRotate'
+import { useAppSelector } from '../../Store/Hooks/useAppSelector'
 
 type ObjectWrapperProps = {
+    slideId: string
     slideObject: TextSlideObject | ImageSlideObject
     isSelected: boolean
     scale?: number
+    isPdf?: boolean
 }
 
-function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
+function ObjectWrapper({ slideId, slideObject, isSelected, scale, isPdf }: ObjectWrapperProps) {
     const { addBlockToSelected, selectBlock } = useAppActions()
+    const imageBlockAsBackgroundId = useAppSelector((state => state.presentation.listSlides.get(slideId)?.backgroundAsImageBlockId)) || ''
 
     const blockId = slideObject.id
     const [selectFunction, setSelectFunction] = useState(() => selectBlock)
     const block = useRef<HTMLImageElement>(null)
     const dragAndDrop = useDragAndDrop(block, slideObject.id, slideObject.isFixed)
 
-
     const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
-        if (event.target instanceof HTMLElement && event.target.classList.contains(styles.handle)) {
+        if (
+            event.target instanceof HTMLElement &&
+            (event.target.classList.contains(styles.rotate) ||
+                event.target.closest(`.${styles.rotate}`))
+        ) {
             return
         }
+
+        if (
+            event.target instanceof HTMLElement &&
+            event.target.classList.contains(styles.handle)
+        ) {
+            return
+        }
+
         dragAndDrop(event)
-    }
+    };
 
 
     useEffect(() => {
@@ -52,6 +68,8 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
         }
     }, [addBlockToSelected, selectBlock])
 
+    const currentPath = window.location.pathname
+
     const pointTopLeft = useRef<HTMLDivElement>(null)
     const pointTop = useRef<HTMLDivElement>(null)
     const pointTopRight = useRef<HTMLDivElement>(null)
@@ -60,6 +78,7 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
     const pointBottom = useRef<HTMLDivElement>(null)
     const pointBottomLeft = useRef<HTMLDivElement>(null)
     const pointLeft = useRef<HTMLDivElement>(null)
+    const pointRotate = useRef<HTMLDivElement>(null)
 
     const handlePointTopLeft = useResize(block, slideObject.isFixed, {
         block: pointTopLeft,
@@ -94,7 +113,14 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
         type: PointType.left
     })
 
+    const handleRotate = useRotate(block, slideObject.rotation, slideObject.isFixed, pointRotate)
+
     const makeFocus = () => {
+        const currentPath = window.location.pathname
+        if (currentPath == '/previewPresentation') {
+            return
+        }
+
         selectFunction(blockId)
     }
 
@@ -106,16 +132,17 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
         zIndex: slideObject.overlayPriority,
         outlineWidth: isSelected ? (scale ? '1px' : '2px') : 0,
         outlineStyle: 'solid',
+        transform: `rotate(${slideObject.rotation}deg)`
     }
 
     const stylePont: React.CSSProperties = {
-        display: (scale || slideObject.isFixed) ? 'none' : 'block',
+        display: (scale || slideObject.isFixed || isPdf) ? 'none' : 'block',
     }
 
-    return (
+    return imageBlockAsBackgroundId != slideObject.id && (
         <div
             key={slideObject.id}
-            className={styles.wrapper}
+            className={`${styles.wrapper} ${currentPath == '/previewPresentation' ? styles.wrapperInPreview : ''}`}
             ref={block}
             onMouseDown={handleMouseDown}
             onClick={makeFocus}
@@ -179,6 +206,16 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
                         style={stylePont}
                         onMouseDown={handlePointLeft}
                     ></div>
+
+                    <div
+                        ref={pointRotate}
+                        className={`${styles.rotate}`}
+                        style={stylePont}
+                        onMouseDown={handleRotate}
+                        draggable={false}
+                    >
+                        <img src="src/Assets/icon_rotate_blue.svg" alt="" className={styles.iconRotate} draggable={false} />
+                    </div>
                 </>
             )}
 
@@ -187,6 +224,7 @@ function ObjectWrapper({ slideObject, isSelected, scale }: ObjectWrapperProps) {
                     key={slideObject.id}
                     textSlideObject={slideObject}
                     scale={scale}
+                    isPdf={isPdf}
                 />
             ) : slideObject.type == 'image_block' ? (
                 <ImageBlock

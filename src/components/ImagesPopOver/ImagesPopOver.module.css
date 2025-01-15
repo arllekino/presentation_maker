@@ -4,7 +4,7 @@
 
 .popOver {
     position: absolute;
-    inline-size: 125px;
+    min-inline-size: 500px;
     padding: 5px;
     z-index: 100000;
     margin-top: 25px;
@@ -15,7 +15,6 @@
     transform: translateY(-10px);
     visibility: hidden;
     transition: 0.3s;
-    width: 600px;
     margin-left: -270px;
 }
 

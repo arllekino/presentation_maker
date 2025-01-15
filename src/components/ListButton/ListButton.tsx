@@ -39,9 +39,9 @@ function ListButton(props: ButtonProps) {
             }
         }
         
-        document.addEventListener('mousedown', handleClickOutside)
+        document.addEventListener('click', handleClickOutside)
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
+            document.removeEventListener('click', handleClickOutside)
         }
     }, [props])
 

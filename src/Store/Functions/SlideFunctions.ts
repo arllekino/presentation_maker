@@ -1,6 +1,5 @@
 import { EditorType } from '../../Types/EditorType'
-import { PresentationType } from '../../Types/PresentationType';
-import { SlideType } from '../../Types/SlideType'
+import { GradientPoint, SlideType } from '../../Types/SlideType'
 import { v4 as uuid } from 'uuid'
 
 function createSlide(editor: EditorType): EditorType {
@@ -27,40 +26,45 @@ function createSlide(editor: EditorType): EditorType {
     return {
         ...editor,
         presentation: newPresentation,
-        selectedSlideId: newSlide.id,
+        selectedSlideIds: [newSlide.id],
     };
 }
 
+function deleteSlide(editor: EditorType): EditorType {
+    const newListSlides = new Map(editor.presentation.listSlides);
+    console.log(123);
 
-function deleteSlide(editor: EditorType, { slideId }: { slideId: string }): EditorType {
-    const modPresentation: PresentationType = {
-        ...editor.presentation,
-        listSlides: new Map(editor.presentation.listSlides)
-    }
-    const currentSlideIndex = modPresentation.orderedSlideIds.indexOf(slideId)
-
-    modPresentation.listSlides.delete(slideId)
-    modPresentation.orderedSlideIds = modPresentation.orderedSlideIds.filter(id => id != slideId)
-
-    const newCurrentSlideId = modPresentation.orderedSlideIds[currentSlideIndex] ?? modPresentation.orderedSlideIds[currentSlideIndex - 1]
+    let newOrderedSlideIds: string[] = []
+    editor.selectedSlideIds.forEach(selectedSlideId => {
+        newListSlides.delete(selectedSlideId)
+        newOrderedSlideIds = editor.presentation.orderedSlideIds.filter(id => id != selectedSlideId);
+    })
 
     return {
         ...editor,
         presentation: {
             ...editor.presentation,
-            listSlides: modPresentation.listSlides,
-            orderedSlideIds: modPresentation.orderedSlideIds.filter((id) => id != slideId)
+            listSlides: newListSlides,
+            orderedSlideIds: newOrderedSlideIds,
         },
-        selectedSlideId: newCurrentSlideId
+        selectedSlideIds: newOrderedSlideIds.length ? [newOrderedSlideIds[0]] : [],
     }
 }
 
 function selectSlide(editor: EditorType, { slideId }: { slideId: string }): EditorType {
     const newEditor = {
         ...editor,
-        selectedSlideId: slideId
+        selectedSlideIds: [slideId]
     }
-    newEditor.selectedBlockIds = []
+
+    return newEditor
+}
+
+function addSlideToSelection(editor: EditorType, { slideId }: { slideId: string }): EditorType {
+    const newEditor = {
+        ...editor,
+        selectedSlideIds: [...editor.selectedSlideIds, slideId]
+    }
 
     return newEditor
 }
@@ -149,11 +153,74 @@ function setBackgroundColorSlide(editor: EditorType, { slideId, hexColor }: { sl
     }
 }
 
+function setBackgroundGradientSlide(editor: EditorType, { slideId, points, angle }: { slideId: string, points: GradientPoint[], angle: number }): EditorType {
+    const slide = editor.presentation.listSlides.get(slideId)
+
+    console.log(123);
+
+
+    if (slide == null) {
+        return editor
+    }
+
+    const newSlide = {
+        ...slide,
+        background: {
+            type: 'gradient' as const,
+            points: points,
+            angle: angle
+        }
+    }
+
+    const newListSlides = new Map(editor.presentation.listSlides)
+    newListSlides.set(slideId, newSlide)
+
+    const newPresentation = {
+        ...editor.presentation,
+        listSlides: newListSlides
+    }
+
+    return {
+        ...editor,
+        presentation: newPresentation
+    }
+}
+
+function makeImageBlockAsBackground(editor: EditorType, { imageSlideObjectId }: { imageSlideObjectId: string }): EditorType {
+    const slide = editor.presentation.listSlides.get(editor.selectedSlideIds[0] || '')
+    if (!slide) {
+        return editor
+    }
+
+    const slideObject = slide.blocks.find(block => block.id == imageSlideObjectId)
+
+    const newSlide = {
+        ...slide,
+        backgroundAsImageBlockId: slideObject?.id || ''
+    }
+
+    const newListSlides = new Map(editor.presentation.listSlides)
+    newListSlides.set(slide.id, newSlide)
+
+    const newPresentation = {
+        ...editor.presentation,
+        listSlides: newListSlides
+    }
+
+    return {
+        ...editor,
+        presentation: newPresentation
+    }
+}
+
 export {
     createSlide,
     deleteSlide,
     selectSlide,
+    addSlideToSelection,
     changeSlidePosition,
     setBackgroundImageSlide,
-    setBackgroundColorSlide
+    setBackgroundColorSlide,
+    setBackgroundGradientSlide,
+    makeImageBlockAsBackground
 }

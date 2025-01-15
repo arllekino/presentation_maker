@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppActions } from '../../Store/Hooks/useAppActions'
 
 function Workspace() {
-    const { createSlide } = useAppActions()
+    const { createSlide, deleteSlide } = useAppActions()
     
     const { t } = useTranslation()
 
@@ -23,6 +23,15 @@ function Workspace() {
                         icon={{
                             path: '/src/assets/icon_add_slide.svg',
                             className: buttonStyles.iconAddSlide,
+                        }}
+                    />
+
+                    <Button
+                        className={styles.deleteSlide}
+                        action={() => deleteSlide()}
+                        icon={{
+                            path: 'src/Assets/icon_trash.svg',
+                            className: ''
                         }}
                     />
                 </div>

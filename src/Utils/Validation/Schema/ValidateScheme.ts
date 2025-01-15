@@ -15,18 +15,16 @@ const schema = {
             },
             required: ["title", "orderedSlideIds", "listSlides"]
         },
-        selectedSlideId: {
-            oneOf: [
-                { type: "string" },
-                { type: "null" }
-            ]
+        selectedSlideIds: {
+            type: "array",
+            items: { type: "string" }
         },
         selectedBlockIds: {
             type: "array",
             items: { type: "string" }
         }
     },
-    required: ["presentation", "selectedSlideId", "selectedBlockIds"],
+    required: ["presentation", "selectedSlideIds", "selectedBlockIds"],
     additionalProperties: false
 }
 

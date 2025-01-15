@@ -19,7 +19,10 @@ type TextSlideObject = SlideObject & {
     backgroundColor: string
     font: Font
     type: 'text_block'
+    textAlignment: TextAlignment
 }
+
+type TextAlignment = 'left' | 'center' | 'right' | 'justify'
 
 type Coordinates = {
     x: number
@@ -47,4 +50,5 @@ export type {
     SlideObject,
     ImageSlideObject,
     TextSlideObject,
+    TextAlignment
 }

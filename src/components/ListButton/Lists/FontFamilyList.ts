@@ -11,6 +11,7 @@ const fontFamilyMap = new Map<string, string>([
     ['Trebuchet MS', styles.fontFamilyTrebuchetMS],
     ['Impact', styles.fontFamilyImpact],
     ['Franklin Gothic Medium', styles.fontFamilyFranklinGothicMedium],
+    ['Tajawal', styles.fontFamilyTajawal]
 ])
 
 function useGetFontFamilyListItems(): ListItem[] {
@@ -23,6 +24,7 @@ function useGetFontFamilyListItems(): ListItem[] {
         trebuchetMS = 'Trebuchet MS',
         impact = 'Impact',
         comicSansMS = 'Franklin Gothic Medium',
+        tajawal = 'Tajawal'
     }
 
     const { changeTextBlockFontFamily } = useAppActions()

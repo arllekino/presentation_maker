@@ -9,7 +9,7 @@ type ImageBlockProps = {
 function ImageBlock({ imageSlideObject, scale }: ImageBlockProps) {
     const styleImageBlock: React.CSSProperties = {
         opacity: imageSlideObject.opacity,
-        backgroundImage: `url(${imageSlideObject.imagePath})`
+        backgroundImage: `url(${imageSlideObject.imagePath})`,
     }
 
     if (imageSlideObject.border != null) {

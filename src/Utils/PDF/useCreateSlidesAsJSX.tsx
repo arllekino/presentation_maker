@@ -10,6 +10,7 @@ function useCreateSlidesAsJSX(): JSX.Element[] {
         slidesAsJSX.push(
             <Slide
                 slideId={slideId}
+                isPdf={true}
             />
         )
     })

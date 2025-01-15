@@ -8,7 +8,7 @@ function createEditor(): EditorType {
 
     return {
         presentation: presentation,
-        selectedSlideId: presentation.orderedSlideIds[0],
+        selectedSlideIds: [presentation.orderedSlideIds[0]],
         selectedBlockIds: []
     }
 }
@@ -38,7 +38,7 @@ function createPresentation(): PresentationType {
     return presentation
 }
 
-function renamePresentation(editor: EditorType, {newTitle}: {newTitle: string}): EditorType {
+function renamePresentation(editor: EditorType, { newTitle }: { newTitle: string }): EditorType {
     const newPresentation = { ...editor.presentation }
 
     newPresentation.title = newTitle
@@ -49,13 +49,29 @@ function renamePresentation(editor: EditorType, {newTitle}: {newTitle: string}):
     }
 }
 
-function setEditor({newEditor}: {newEditor: EditorType}): EditorType {
+function setEditor({ newEditor }: { newEditor: EditorType }): EditorType {
     return newEditor
 }
 
+function unsetSelection(editor: EditorType): EditorType {
+    return {
+        ...editor,
+        selectedBlockIds: []
+    }
+}
+
+function setSelectedBlocks(editor: EditorType, {newSelectedBlockIds}: {newSelectedBlockIds: string[]}): EditorType {
+    return {
+        ...editor,
+        selectedBlockIds: newSelectedBlockIds
+    }
+}
+
 export {
+    unsetSelection,
     createEditor,
     createPresentation,
     renamePresentation,
-    setEditor
+    setEditor,
+    setSelectedBlocks
 }

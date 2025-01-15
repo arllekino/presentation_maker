@@ -1,0 +1,32 @@
+.previewController {
+    position: fixed;
+    margin-inline-start: 47%;
+    margin-block-start: -70px;
+    z-index: 10000;
+    border-radius: 50px;
+    border: 1px solid #6B53FF;
+    transition: opacity 0.3s ease;
+}
+
+.iconController {
+    opacity: 0.3;
+    width: 40px;
+    height: 40px;
+}
+
+.iconController:hover {
+    opacity: 1;
+}
+
+.iconPrevArrow {
+    transform: scaleX(-1);
+}
+
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.iconCross {
+    color: #D24F4F;
+}

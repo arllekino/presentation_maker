@@ -29,7 +29,30 @@ function getImageDimensions(file: Blob): Promise<ImageDimensions> {
     })
 }
 
+function convertImageUrlToBase64(url: string): Promise<string> {
+    return fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Сеть не в порядке')
+            }
+            return response.blob()
+        })
+        .then(blob => {
+            return new Promise<string>((resolve, reject) => {
+                const reader = new FileReader()
+                reader.onloadend = () => {
+                    resolve(reader.result as string)
+                }
+                reader.onerror = () => {
+                    reject('Ошибка при чтении файла')
+                }
+                reader.readAsDataURL(blob)
+            })
+        })
+}
+
 export {
+    convertImageUrlToBase64,
     convertImageToBase64,
     getImageDimensions
 }

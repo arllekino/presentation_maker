@@ -2,24 +2,22 @@ import styles from './SlideList.module.css'
 import { useTranslation } from 'react-i18next'
 import Slide from '../../../components/Slide/Slide'
 import { DefaultSlideSetting } from '../../../Utils/DefaultSlideSettings'
-import React, { useEffect, useRef, useState } from 'react'
-import ListButton, { ListItem } from '../../../components/ListButton/ListButton'
-import listButtonStyles from '../../../components/ListButton/ListButton.module.css'
+import React, { useEffect, useRef } from 'react'
 import { useAppActions } from '../../../Store/Hooks/useAppActions'
 import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
 import useDraggableVertical from '../../../components/Slide/useDragAndDropVertical'
 
 function SlideList() {
-	const { t, i18n, } = useTranslation()
+	const { i18n, } = useTranslation()
 
-	const { deleteSlide, selectSlide } = useAppActions()
+	const { selectSlide, addSlideToSelection } = useAppActions()
 
 	const slideList = useRef<HTMLDivElement>(null)
-	const [slideIdMenuOpen, setSlideIdMenuOpen] = useState('')
 
 	const orderedSlideIds = useAppSelector((state => state.presentation.orderedSlideIds))
-	const currentSlideId = useAppSelector((state => state.selectedSlideId))
-	const handleMouseDown = useDraggableVertical(orderedSlideIds, slideList)
+	const currentSlideId = useAppSelector((state => state.selectedSlideIds[0]))
+	const selectedSlideIds = useAppSelector((state => state.selectedSlideIds))
+	const handleMouseDown = useDraggableVertical(slideList)
 	const currentSlideRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
@@ -35,23 +33,15 @@ function SlideList() {
 		<>
 			<div className={styles.slideList} ref={slideList}>
 				{orderedSlideIds.map((slideId, index) => {
-					const isCurrent = slideId == currentSlideId
-					const onRightMouseClick = (event: React.MouseEvent<HTMLDivElement>) => {
-						event.preventDefault()
-						setSlideIdMenuOpen(slideId)
-					}
+					const isCurrent = selectedSlideIds.includes(slideId)
 
-					const deleteItem: ListItem = {
-						text: t('deleteSlide'),
-						action: () => { deleteSlide(slideId) },
-						className: '',
-						icon: {
-							path: 'src/Assets/icon_trash.svg',
-							className: listButtonStyles.deleteSlideIcon
+					const handleClickSlide: React.MouseEventHandler<HTMLDivElement> = (event) => {
+						if (event.ctrlKey) {
+							addSlideToSelection(slideId)
+						} else {
+							selectSlide(slideId)
 						}
 					}
-
-					const listItems: ListItem[] = [deleteItem]
 
 					const stylesPreviewWrap: React.CSSProperties = {
 						outline: `${isCurrent ? '2px solid #3B82FA' : '1px solid #BABABA'}`
@@ -61,11 +51,9 @@ function SlideList() {
 						<React.Fragment key={slideId}>
 							<div
 								className={styles.previewSlide}
-								onClick={() => selectSlide(slideId)}
+								onClick={handleClickSlide}
 								onMouseDown={handleMouseDown}
-								onContextMenu={onRightMouseClick}
 								ref={isCurrent ? currentSlideRef : null}
-
 							>
 								<span className={styles.slideIndex}>
 									{i18n.language == 'ar' ? toArabicNumber(index + 1) : index + 1}
@@ -76,17 +64,6 @@ function SlideList() {
 										scale={Number(DefaultSlideSetting.previewScale)}
 									/>
 								</div>
-
-								{slideIdMenuOpen == slideId && (
-									<ListButton
-										menuClassName=''
-										className={listButtonStyles.menuSlide}
-										action={() => { }}
-										onClose={() => setSlideIdMenuOpen('')}
-										listItem={listItems}
-										isOpen={true}
-									/>
-								)}
 							</div>
 						</React.Fragment>
 					);

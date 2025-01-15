@@ -1,21 +1,34 @@
 import { ImageSlideObject, TextSlideObject } from './SlideObjectTypes'
 
 type BackgroundImage = {
-    path: string
     type: 'image'
+    path: string
 }
 
 type BackgroundColor = {
-    hexColor: string
     type: 'color'
+    hexColor: string
+}
+
+type BackgroundGradient = {
+    type: 'gradient'
+    points: GradientPoint[]
+    angle: number
+}
+
+type GradientPoint = {
+    color: string
+    range: number
 }
 
 type SlideType = {
     id: string
     blocks: Array<TextSlideObject | ImageSlideObject>
-    background: BackgroundColor | BackgroundImage
+    background: BackgroundColor | BackgroundImage | BackgroundGradient
+    backgroundAsImageBlockId?: string
 }
 
 export type {
-    SlideType
+    SlideType,
+    GradientPoint
 }

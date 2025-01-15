@@ -1,32 +1,34 @@
 import styles from '../Tools/Tools.module.css'
 import { useTranslation } from 'react-i18next'
-import Button from '../../../components/Button/Button'
 import ButtonInput from '../../../components/Button/ButtonInput'
 import { v4 as uuid } from 'uuid'
-import useGetImageReplacer from '../../../Utils/InputSet/useGetImageReplacer'
 import { useAppActions } from '../../../Store/Hooks/useAppActions'
 import { useAppSelector } from '../../../Store/Hooks/useAppSelector'
 import { useState } from 'react'
+import Toggle from '../../../components/Toggle/Toggle'
 
 
 function ToolImageBlock() {
     const { t } = useTranslation()
-    const { raiseOverlayPriority, lowerOverlayPriority, setLocking } = useAppActions()
-    const selectedSlideId = useAppSelector((state => state.selectedSlideId))
+    const { setLocking } = useAppActions()
+    const selectedSlideId = useAppSelector((state => state.selectedSlideIds[0]))
     const selectedBlockIds = useAppSelector((state => state.selectedBlockIds))
     const presentation = useAppSelector((state => state.presentation))
+    const selectedBlock = useAppSelector((state => state.presentation.listSlides.get(selectedSlideId ?? '')?.blocks.find(block => block.id == selectedBlockIds[0])))
+    const slide = presentation.listSlides.get(selectedSlideId || '')
+
+    const { changeBlockPosition, resizeBlock, setRotationToBlock, setOpacityToBlock, makeImageBlockAsBackground } = useAppActions()
 
     const [isSizePositionToolOpen, setIsSizePositionToolOpen] = useState(false)
+    const [isImageBlockBackground, setIsBackgroundImage] = useState(!!slide?.backgroundAsImageBlockId)
 
     if (!selectedSlideId || selectedBlockIds.length != 1) {
         return
     }
 
-    const slide = presentation.listSlides.get(selectedSlideId)
-    if (!slide) {
+    if (!slide || !selectedBlock) {
         return
     }
-
     const slideObject = slide.blocks.find(object => {
         return object.id == selectedBlockIds[0]
     })
@@ -35,26 +37,53 @@ function ToolImageBlock() {
         return
     }
 
-    const toFront = () => {
-        raiseOverlayPriority(slideObject)
-    }
-
-    const toBack = () => {
-        lowerOverlayPriority(slideObject)
-    }
-
     const onClickLock = () => {
         setLocking(!slideObject.isFixed)
-    }
-
-    const useHandleImageReplace = () => {
-        useGetImageReplacer(slideObject.id)
     }
 
     const chevronStyle: React.CSSProperties = {
         transition: 'transform 0.5s ease',
         transform: `rotate(${isSizePositionToolOpen ? '0deg' : '-90deg'})`,
-    };
+    }
+
+    const setPosX: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newX = Number((event.target as HTMLInputElement).value)
+        changeBlockPosition(newX, selectedBlock?.coordinates.y || 0)
+    }
+
+    const setPosY: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newY = Number((event.target as HTMLInputElement).value)
+        changeBlockPosition(selectedBlock?.coordinates.x || 0, newY)
+    }
+
+    const setWidth: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newWidth = Number((event.target as HTMLInputElement).value)
+        resizeBlock(newWidth, selectedBlock?.size.height ?? 100)
+    }
+
+    const setHeight: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newHeight = Number((event.target as HTMLInputElement).value)
+        resizeBlock(selectedBlock?.size.width ?? 100, newHeight)
+    }
+
+    const setRotation: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newRotate = Number((event.target as HTMLInputElement).value)
+        setRotationToBlock(newRotate)
+    }
+
+    const setOpacity: React.ChangeEventHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newOpacity = Number((event.target as HTMLInputElement).value)
+        setOpacityToBlock(newOpacity / 100)
+    }
+
+    const toggleImageBlockAsBackground = () => {
+        setIsBackgroundImage(!isImageBlockBackground)
+        if (!isImageBlockBackground) {
+            makeImageBlockAsBackground(selectedBlock.id)
+        } else {
+            makeImageBlockAsBackground('')
+        }
+    }
 
     return (
         <>
@@ -64,7 +93,7 @@ function ToolImageBlock() {
 
             <div className={styles.toolMain}>
 
-            <div className={styles.toolElementArea}>
+                <div className={styles.toolElementArea}>
                     <div className={styles.toolTextArea}>
                         <span className={styles.toolSubtitle}>
                             {t('sizeAndPosition')}
@@ -94,94 +123,76 @@ function ToolImageBlock() {
                         <div className={styles.sizePositionUtils}>
                             <ButtonInput
                                 labelId={uuid()}
-                                className={'asd'}
-                                action={() => { }}
+                                className={styles.inputSizePosition}
+                                action={setWidth}
+                                value={String(Math.round(selectedBlock?.size.width ?? 0))}
                                 inputType='number'
                                 text='W'
                             />
 
                             <ButtonInput
                                 labelId={uuid()}
-                                className={'asd'}
-                                action={() => { }}
+                                className={styles.inputSizePosition}
+                                action={setHeight}
+                                value={String(Math.round(selectedBlock?.size.height ?? 0))}
                                 inputType='number'
                                 text='H'
                             />
 
                             <ButtonInput
                                 labelId={uuid()}
-                                className={'asd'}
-                                action={() => { }}
+                                className={styles.inputSizePosition}
+                                action={setPosX}
+                                value={String(Math.round(selectedBlock?.coordinates.x ?? 0))}
                                 inputType='number'
                                 text='X'
                             />
 
                             <ButtonInput
                                 labelId={uuid()}
-                                className={'asd'}
-                                action={() => { }}
+                                className={styles.inputSizePosition}
+                                action={setPosY}
+                                value={String(Math.round(selectedBlock?.coordinates.y ?? 0))}
                                 inputType='number'
                                 text='Y'
                             />
 
                             <ButtonInput
                                 labelId={uuid()}
-                                className={'asd'}
-                                action={() => { }}
+                                className={styles.inputSizePosition}
+                                action={setRotation}
+                                value={String(Math.round(selectedBlock?.rotation))}
                                 inputType='number'
                                 icon={{
-                                    path: 'asd',
-                                    className: 'sdf'
-
+                                    path: 'src/Assets/icon_rotate.svg',
+                                    className: ''
                                 }}
                             />
-
                         </div>
                     )}
                 </div>
 
                 <div className={styles.toolUtilsArea}>
-                    <div className={styles.toolWrapper}>
-                        <ButtonInput
-                            labelId={uuid()}
-                            className={styles.toolSubtitle}
-                            action={useHandleImageReplace}
-                            text={t('replaceMedia')}
-                            inputType={'file'}
-                        />
-                    </div>
+                    <Toggle
+                        text={t('setAsBackground')}
+                        value={isImageBlockBackground}
+                        action={toggleImageBlockAsBackground}
+                    />
                 </div>
+
                 <div className={styles.toolUtilsArea}>
                     <span className={styles.toolSubtitle}>
                         {t('opacity')}
                     </span>
-                </div>
-                <div className={styles.toolUtilsArea}>
-                    <span className={styles.toolSubtitle}>
-                        {t('shadow')}
-                    </span>
-                </div>
-                <div className={`${styles.toolUtilsArea} ${styles.toolFrontBack}`}>
-                    <Button
-                        className={`${styles.toolButton} ${styles.toolFrontBackButton}`}
-                        action={toFront}
-                        text={t('toFront')}
-                        icon={{
-                            path: 'src/Assets/icon_to_front.svg',
-                            className: styles.iconToBack
-                        }}
-                    />
-                    <Button
-                        className={`${styles.toolButton} ${styles.toolFrontBackButton}`}
-                        action={toBack}
-                        text={t('toBack')}
-                        icon={{
-                            path: 'src/Assets/icon_to_back.svg',
-                            className: styles.iconToBack
-                        }}
-                    />
-                </div>
 
+                    <ButtonInput
+                        labelId={uuid()}
+                        className={styles.opacityInput}
+                        action={setOpacity}
+                        inputType='range'
+                        value={String(selectedBlock?.opacity * 100)}
+                    />
+                </div>
             </div>
         </>
     )

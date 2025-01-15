@@ -1,5 +1,6 @@
 import { EditorType } from '../../Types/EditorType'
-import { ImageSlideObject, TextSlideObject } from '../../Types/SlideObjectTypes'
+import { ImageSlideObject, TextAlignment, TextSlideObject } from '../../Types/SlideObjectTypes'
+import { GradientPoint } from '../../Types/SlideType'
 import { ActionType } from './Action'
 import { CreateImageBlockPayload, CreateTextBlockPayload } from './PayloadTypes'
 
@@ -16,10 +17,9 @@ function setEditor(newEditor: EditorType) {
     }
 }
 
-function deleteSlide(slideId: string) {
+function deleteSlide() {
     return {
         type: ActionType.DELETE_SLIDE,
-        payload: { slideId }
     }
 }
 
@@ -141,6 +141,13 @@ function resizeBlock(newWidth: number, newHeight: number) {
     }
 }
 
+function setRotationToBlock(newRotate: number) {
+    return {
+        type: ActionType.SET_ROTATION_TO_BLOCK,
+        payload: { newRotate }
+    }
+}
+
 function setOpacityToBlock(newOpacity: number) {
     return {
         type: ActionType.SET_OPACITY_TO_BLOCK,
@@ -215,16 +222,69 @@ function loadDocumentFromJSON(editorJSON: string) {
     }
 }
 
+function changeTextAlignment(newTextAlignment: TextAlignment) {
+    return {
+        type: ActionType.CHANGE_TEXT_ALIGNMENT,
+        payload: { newTextAlignment }
+    }
+}
+
+function unsetSelection() {
+    return {
+        type: ActionType.UNSET_SELECTION
+    }
+}
+
+function setSelectedBlocks(selectedBlockIds: string[]) {
+    return {
+        type: ActionType.SET_SELECTED_BLOCKS,
+        payload: { selectedBlockIds }
+    }
+}
+
+function makeImageBlockAsBackground(imageSlideObjectId: string) {
+    return {
+        type: ActionType.MAKE_IMAGE_BLOCK_AS_BACKGROUND,
+        payload: {
+            imageSlideObjectId
+        }
+    }
+}
+
+function setBackgroundGradientSlide(slideId: string, colorPoints: GradientPoint[], angle: number) {
+    return {
+        type: ActionType.SET_BACKGROUND_GRADIENT_SLIDE,
+        payload: {
+            slideId: slideId,
+            points: colorPoints,
+            angle: angle
+        }
+    }
+}
+
+function addSlideToSelection(slideId: string) {
+    return {
+        type: ActionType.ADD_SLIDE_TO_SELECTION,
+        payload: {
+            slideId
+        }
+    }
+}
+
 export {
     setEditor,
     createSlide,
     deleteSlide,
     selectSlide,
+    addSlideToSelection,
+    unsetSelection,
+    setSelectedBlocks,
     renamePresentation,
     unsetSelectionSlideObjects,
     changeSlidePosition,
     setBackgroundImageSlide,
     setBackgroundColorSlide,
+    setBackgroundGradientSlide,
     selectBlock,
     addBlockToSelected,
     deleteBlockFromSelected,
@@ -236,6 +296,7 @@ export {
     setLocking,
     changeBlockPosition,
     resizeBlock,
+    setRotationToBlock,
     setOpacityToBlock,
     changeTextBlockContent,
     replaceImage,
@@ -247,4 +308,6 @@ export {
     saveDocumentToFile,
     getDocument,
     loadDocumentFromJSON,
+    changeTextAlignment,
+    makeImageBlockAsBackground
 }

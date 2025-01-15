@@ -31,7 +31,14 @@ enum ActionType {
     SAVE_DOCUMENT = 'saveDocument',
     SAVE_DOCUMENT_TO_FILE = 'saveDocumentToFile',
     GET_DOCUMENT = 'getDocument',
-    LOAD_DOCUMENT_FROM_JSON = 'loadDocumentFromJSON'
+    LOAD_DOCUMENT_FROM_JSON = 'loadDocumentFromJSON',
+    SET_ROTATION_TO_BLOCK = 'setRotationToBlock',
+    CHANGE_TEXT_ALIGNMENT = 'changeTextAlignment',
+    UNSET_SELECTION = 'unsetSelection',
+    SET_SELECTED_BLOCKS = 'setSelectedBlocks',
+    MAKE_IMAGE_BLOCK_AS_BACKGROUND = 'makeImageBlockAsBackground',
+    SET_BACKGROUND_GRADIENT_SLIDE = 'setBackgroundGradientSlide',
+    ADD_SLIDE_TO_SELECTION = 'addSlideToSelection'
 }
 
 export {

@@ -1,5 +1,6 @@
 import { EditorType } from "../../Types/EditorType"
-import { ImageSlideObject, TextSlideObject } from "../../Types/SlideObjectTypes"
+import { ImageSlideObject, TextAlignment, TextSlideObject } from "../../Types/SlideObjectTypes"
+import { GradientPoint } from "../../Types/SlideType"
 import { ActionType } from "./ActionType"
 import { CreateImageBlockPayload, CreateTextBlockPayload } from "./PayloadTypes"
 
@@ -16,9 +17,6 @@ type CreateSlideAction = {
 
 type DeleteSlideAction = {
     type: ActionType.DELETE_SLIDE,
-    payload: {
-        slideId: string
-    }
 }
 
 type SelectSlideAction = {
@@ -138,6 +136,13 @@ type ResizeBlockAction = {
     }
 }
 
+type SetRotationToBlockAction = {
+    type: ActionType.SET_ROTATION_TO_BLOCK,
+    payload: {
+        newRotate: number
+    }
+}
+
 type SetOpacityToBlockAction = {
     type: ActionType.SET_OPACITY_TO_BLOCK,
     payload: {
@@ -208,11 +213,53 @@ type LoadDocumentFromJSON = {
     }
 }
 
+type changeTextAlignmentAction = {
+    type: ActionType.CHANGE_TEXT_ALIGNMENT,
+    payload: {
+        newTextAlignment: TextAlignment
+    }
+}
+
+type UnsetSelectionAction = {
+    type: ActionType.UNSET_SELECTION
+}
+
+type SetSelectedBlocks = {
+    type: ActionType.SET_SELECTED_BLOCKS,
+    payload: {
+        newSelectedBlockIds: string[]
+    }
+}
+
+type MakeImageBlockAsBackgroundAction = {
+    type: ActionType.MAKE_IMAGE_BLOCK_AS_BACKGROUND,
+    payload: {
+        imageSlideObjectId: string
+    }
+}
+
+type SetBackgroundColorGradientAction = {
+    type: ActionType.SET_BACKGROUND_GRADIENT_SLIDE,
+    payload: {
+        slideId: string,
+        points: GradientPoint[],
+        angle: number
+    }
+}
+
+type AddSlideToSelectionAction = {
+    type: ActionType.ADD_SLIDE_TO_SELECTION,
+    payload: {
+        slideId: string
+    }
+}
+
 type EditorAction =
     | SetEditorAction
     | CreateSlideAction
     | DeleteSlideAction
     | SelectSlideAction
+    | AddSlideToSelectionAction
     | RenamePresentationAction
     | UnsetSelectionSlideObjectsAction
     | ChangeSlidePositionAction
@@ -229,6 +276,7 @@ type EditorAction =
     | SetLockingAction
     | ChangeBlockPositionAction
     | ResizeBlockAction
+    | SetRotationToBlockAction
     | SetOpacityToBlockAction
     | ChangeTextBlockContentAction
     | ReplaceImageAction
@@ -240,7 +288,11 @@ type EditorAction =
     | SaveDocumentToFileAction
     | GetDocumentAction
     | LoadDocumentFromJSON
-
+    | changeTextAlignmentAction
+    | UnsetSelectionAction
+    | SetSelectedBlocks
+    | MakeImageBlockAsBackgroundAction
+    | SetBackgroundColorGradientAction
 
 export {
     ActionType,

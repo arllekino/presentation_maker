@@ -59,3 +59,16 @@
 	position: absolute;
 	font-family: 'Montserrat', 'Tajawal', sans-serif;
 }
+
+.menu {
+	margin-inline-start: -100px;
+}
+
+.deleteSlide {
+	z-index: 100000;
+}
+
+.deleteCross {
+	position: absolute;
+	padding-inline-start: 120px;
+}

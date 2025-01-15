@@ -2,7 +2,7 @@ import { PresentationType } from './PresentationType'
 
 type EditorType = {
     presentation: PresentationType
-    selectedSlideId: string | null
+    selectedSlideIds: string[]
     selectedBlockIds: string[]
 }
 

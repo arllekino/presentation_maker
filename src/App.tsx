@@ -1,23 +1,24 @@
-import { useTranslation } from 'react-i18next'
 import './App.module.css'
-import TopBar from './View/TopBar/TopBar.tsx'
-import Workspace from './View/Workspace/Workspace'
-import { HistoryType } from './Utils/History.ts'
-import { HistoryContext } from './components/ObjectWrapper/Hooks/HistoryContext.ts'
+import EditorView from './View/EditorVIew/EditorView.tsx'
+import PreviewPresentation from './View/PreviewPresentation/PreviewPresentation.tsx'
+import { HistoryContext } from './Store/History/HistoryContext.ts'
+import { BrowserRouter, Route, Routes } from 'react-router'
+import { HistoryType } from './Store/History/History.ts'
 
 type AppProps = {
 	history: HistoryType
 }
 
 function App({ history }: AppProps) {
-	const { i18n } = useTranslation()
 
 	return (
 		<HistoryContext.Provider value={history}>
-			<div dir={i18n.language == 'ar' ? 'rtl' : 'ltr'}>
-				<TopBar />
-				<Workspace />
-			</div>
+			<BrowserRouter>
+				<Routes>
+					<Route path='/' element={<EditorView />} />
+					<Route path='/previewPresentation' element={<PreviewPresentation />} />
+				</Routes>
+			</BrowserRouter>
 		</HistoryContext.Provider>
 	)
 }

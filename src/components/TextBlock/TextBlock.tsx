@@ -7,12 +7,12 @@ import { useAppActions } from '../../Store/Hooks/useAppActions'
 type TextBlockProps = {
     textSlideObject: TextSlideObject
     scale?: number
+    isPdf?: boolean 
 }
 
-function TextBlock({ textSlideObject, scale }: TextBlockProps) {
+function TextBlock({ textSlideObject, scale, isPdf }: TextBlockProps) {
     const { t } = useTranslation()
     const { changeTextBlockContent } = useAppActions()
-    const [isContentEditable, setIsContentEditable] = useState(false)
     const [textContent, setTextContent] = useState('')
 
     const styleTextBlock: React.CSSProperties = {
@@ -25,6 +25,7 @@ function TextBlock({ textSlideObject, scale }: TextBlockProps) {
         borderWidth: textSlideObject.border?.width || 0,
         borderStyle: 'solid',
         borderColor: textSlideObject.border?.hexColor || 'transparent',
+        textAlign: textSlideObject.textAlignment
     }
 
     const handleInputChange = (event: React.FormEvent<HTMLDivElement>) => {
@@ -39,8 +40,7 @@ function TextBlock({ textSlideObject, scale }: TextBlockProps) {
         <div
             className={styles.textBlock}
             style={styleTextBlock}
-            contentEditable={isContentEditable}
-            onDoubleClick={() => setIsContentEditable(!isContentEditable)}
+            contentEditable={isPdf ? false : true}
             onInput={handleInputChange}
             onBlur={handleBlur}
             suppressContentEditableWarning={true}

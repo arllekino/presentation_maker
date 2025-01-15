@@ -5,7 +5,7 @@ import './Utils/Localization/18n.ts'
 import { Provider } from 'react-redux'
 import { store } from './Store/Redux/Store.ts'
 import { StrictMode } from 'react'
-import { initHistory } from './Utils/History.ts'
+import { initHistory } from './Store/History/History.ts'
 
 const root = createRoot(document.querySelector('#root')!)
 

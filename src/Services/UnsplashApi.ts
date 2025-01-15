@@ -35,7 +35,6 @@ async function fetchSearchImages(query: string, page: number = 1, perPage: numbe
         return data['results'] as UnsplashImageType[]
     } catch (error) {
         console.log(error)
-        
     }
 }
 

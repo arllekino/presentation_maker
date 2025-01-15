@@ -13,8 +13,9 @@ function useCreatePopOverImagesFromUnsplash(unsplashImages: UnsplashImageType[] 
     const popOverImages: PopOverImageType[] = []
     unsplashImages.forEach(image => {
         const imageSize = getImageSize(image.urls.small)
+        
         popOverImages.push({
-            url: image.urls.small_s3,
+            url: image.urls.small,
             action: () => createImageBlock({
                 x: 0,
                 y: 0,

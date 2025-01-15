@@ -23,7 +23,6 @@ function useConvertPresentationToPdf(title: string) {
             format: [800, 450]
         })
 
-
         for (let i = 0; i < slidesAsJSX.length; i++) {
             const slideJSX = slidesAsJSX[i]
 
@@ -70,6 +69,7 @@ function useConvertPresentationToPdf(title: string) {
 
         root.unmount()
         document.body.removeChild(tempContainer)
+
     }
 }
 

@@ -1,5 +1,5 @@
 import { EditorType } from '../../Types/EditorType'
-import { ImageSlideObject, TextSlideObject } from '../../Types/SlideObjectTypes'
+import { ImageSlideObject, TextAlignment, TextSlideObject } from '../../Types/SlideObjectTypes'
 import { v4 as uuid } from 'uuid'
 
 function unsetSelectedSlideObject(editor: EditorType, { slideObjectId }: { slideObjectId: string }): EditorType {
@@ -38,11 +38,11 @@ function deleteBlockFromSelected(editor: EditorType, { blockId }: { blockId: str
 }
 
 function raiseOverlayPriority(editor: EditorType, { slideObject }: { slideObject: ImageSlideObject | TextSlideObject }): EditorType {
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
 
     if (currentSlide == null) {
         return editor
@@ -77,11 +77,11 @@ function raiseOverlayPriority(editor: EditorType, { slideObject }: { slideObject
 }
 
 function lowerOverlayPriority(editor: EditorType, { slideObject }: { slideObject: ImageSlideObject | TextSlideObject }): EditorType {
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
 
     if (currentSlide == null) {
         return editor
@@ -125,13 +125,13 @@ type TextBlockProps = {
 }
 
 function createTextBlock(editor: EditorType, { x, y, width, height, content }: TextBlockProps): EditorType {
-    const { selectedSlideId, presentation } = editor;
+    const { selectedSlideIds, presentation } = editor;
 
-    if (!selectedSlideId || !presentation.listSlides.has(selectedSlideId)) {
+    if (!selectedSlideIds.length || !presentation.listSlides.has(selectedSlideIds[0])) {
         return editor;
     }
 
-    const currentSlide = presentation.listSlides.get(selectedSlideId);
+    const currentSlide = presentation.listSlides.get(selectedSlideIds[0]);
     if (!currentSlide) {
         return editor
     }
@@ -146,7 +146,7 @@ function createTextBlock(editor: EditorType, { x, y, width, height, content }: T
         typeText: 'text_block',
         isFixed: false,
         rotation: 0,
-        fontWeight: 400
+        fontWeight: 400,
     };
 
     const textSlideObject: TextSlideObject = {
@@ -156,6 +156,7 @@ function createTextBlock(editor: EditorType, { x, y, width, height, content }: T
         content: content || defaultProps.content,
         backgroundColor: defaultProps.backgroundColor,
         opacity: defaultProps.opacity,
+        textAlignment: 'left',
         font: {
             family: defaultProps.fontFamily,
             size: defaultProps.fontSize,
@@ -200,13 +201,13 @@ type ImageBlockProps = {
 }
 
 function createImageBlock(editor: EditorType, { x, y, width, height, path }: ImageBlockProps): EditorType {
-    const { selectedSlideId, presentation } = editor;
+    const { selectedSlideIds, presentation } = editor;
 
-    if (!selectedSlideId || !presentation.listSlides.has(selectedSlideId)) {
+    if (!selectedSlideIds.length || !presentation.listSlides.has(selectedSlideIds[0])) {
         return editor;
     }
 
-    const currentSlide = presentation.listSlides.get(selectedSlideId);
+    const currentSlide = presentation.listSlides.get(selectedSlideIds[0])
     if (!currentSlide) {
         return editor;
     }
@@ -217,7 +218,7 @@ function createImageBlock(editor: EditorType, { x, y, width, height, path }: Ima
         typeImage: 'image_block',
         isFixed: false,
         rotation: 0
-    };
+    }
 
     const imageSlideObject: ImageSlideObject = {
         id: uuid(),
@@ -230,7 +231,7 @@ function createImageBlock(editor: EditorType, { x, y, width, height, path }: Ima
         type: 'image_block',
         isFixed: defaultProps.isFixed,
         rotation: defaultProps.rotation
-    };
+    }
 
     const newCurrentSlide = {
         ...currentSlide,
@@ -255,13 +256,13 @@ function createImageBlock(editor: EditorType, { x, y, width, height, path }: Ima
 
 
 function deleteBlocksFromSlide(editor: EditorType): EditorType {
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
     const selectedBlockIds = editor.selectedBlockIds
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
     if (currentSlide == null) {
         return editor
     }
@@ -285,11 +286,11 @@ function deleteBlocksFromSlide(editor: EditorType): EditorType {
 }
 
 function setLocking(editor: EditorType, { isLocked }: { isLocked: boolean }): EditorType {
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
     if (currentSlide == null) {
         return editor
     }
@@ -322,11 +323,11 @@ function setLocking(editor: EditorType, { isLocked }: { isLocked: boolean }): Ed
 }
 
 function changeBlockPosition(editor: EditorType, { newX, newY }: { newX: number, newY: number }): EditorType {
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
     if (currentSlide == null) {
         return editor
     }
@@ -350,7 +351,7 @@ function changeBlockPosition(editor: EditorType, { newX, newY }: { newX: number,
     }
 
     const newListSlides = new Map(editor.presentation.listSlides)
-    newListSlides.set(editor.selectedSlideId, newCurrentSlide)
+    newListSlides.set(editor.selectedSlideIds[0], newCurrentSlide)
 
     const newPresentation = {
         ...editor.presentation,
@@ -368,11 +369,11 @@ function resizeBlock(editor: EditorType, { newWidth, newHeight }: { newWidth: nu
         return editor
     }
 
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
     if (currentSlide == null) {
         return editor
     }
@@ -399,7 +400,45 @@ function resizeBlock(editor: EditorType, { newWidth, newHeight }: { newWidth: nu
         ...editor.presentation,
         listSlides: new Map(editor.presentation.listSlides)
     }
-    newPresentation.listSlides.set(editor.selectedSlideId, newCurrentSlide)
+    newPresentation.listSlides.set(editor.selectedSlideIds[0], newCurrentSlide)
+
+    return {
+        ...editor,
+        presentation: newPresentation
+    }
+}
+
+function setRotationToBlock(editor: EditorType, { newRotate }: { newRotate: number }): EditorType {
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0] ?? '')
+    if (!currentSlide) {
+        return editor
+    }
+
+    const selectedBlock = currentSlide.blocks.find( block => block.id == editor.selectedBlockIds[0])
+    if (!selectedBlock) {
+        return editor
+    }
+
+    const updatedBlocks = currentSlide.blocks.map(block => {
+        if (editor.selectedBlockIds.includes(block.id)) {
+            return {
+                ...block,
+                rotation: newRotate
+            }
+        }
+        return block
+    })
+
+    const newCurrentSlide = {
+        ...currentSlide,
+        blocks: updatedBlocks
+    }
+
+    const newPresentation = {
+        ...editor.presentation,
+        listSlides: new Map(editor.presentation.listSlides)
+    }
+    newPresentation.listSlides.set(currentSlide.id, newCurrentSlide)
 
     return {
         ...editor,
@@ -412,11 +451,11 @@ function setOpacityToBlock(editor: EditorType, { newOpacity }: { newOpacity: num
         return editor
     }
 
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
     if (currentSlide == null) {
         return editor
     }
@@ -440,7 +479,7 @@ function setOpacityToBlock(editor: EditorType, { newOpacity }: { newOpacity: num
         ...editor.presentation,
         listSlides: new Map(editor.presentation.listSlides)
     }
-    newPresentation.listSlides.set(editor.selectedSlideId, newCurrentSlide)
+    newPresentation.listSlides.set(editor.selectedSlideIds[0], newCurrentSlide)
 
     return {
         ...editor,
@@ -449,11 +488,11 @@ function setOpacityToBlock(editor: EditorType, { newOpacity }: { newOpacity: num
 }
 
 function changeTextBlockContent(editor: EditorType, { id, newContent }: { id: string, newContent: string }): EditorType {
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
     if (currentSlide == null) {
         return editor
     }
@@ -478,7 +517,7 @@ function changeTextBlockContent(editor: EditorType, { id, newContent }: { id: st
         ...editor.presentation,
         listSlides: new Map(editor.presentation.listSlides)
     }
-    newPresentation.listSlides.set(editor.selectedSlideId, newCurrentSlide)
+    newPresentation.listSlides.set(editor.selectedSlideIds[0], newCurrentSlide)
 
     return {
         ...editor,
@@ -487,11 +526,11 @@ function changeTextBlockContent(editor: EditorType, { id, newContent }: { id: st
 }
 
 function replaceImage(editor: EditorType, { id, newPath }: { id: string, newPath: string }): EditorType {
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
     if (currentSlide == null) {
         return editor
     }
@@ -524,7 +563,7 @@ function replaceImage(editor: EditorType, { id, newPath }: { id: string, newPath
         ...editor.presentation,
         listSlides: new Map(editor.presentation.listSlides)
     }
-    newPresentation.listSlides.set(editor.selectedSlideId, newSlide)
+    newPresentation.listSlides.set(editor.selectedSlideIds[0], newSlide)
 
     return {
         ...editor,
@@ -533,11 +572,11 @@ function replaceImage(editor: EditorType, { id, newPath }: { id: string, newPath
 }
 
 function changeTextBlockFontFamily(editor: EditorType, { newFontFamily }: { newFontFamily: string }): EditorType {
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
     if (currentSlide == null) {
         return editor
     }
@@ -564,7 +603,7 @@ function changeTextBlockFontFamily(editor: EditorType, { newFontFamily }: { newF
         ...editor.presentation,
         listSlides: new Map(editor.presentation.listSlides)
     }
-    newPresentation.listSlides.set(editor.selectedSlideId, newCurrentSlide)
+    newPresentation.listSlides.set(editor.selectedSlideIds[0], newCurrentSlide)
 
     return {
         ...editor,
@@ -573,11 +612,11 @@ function changeTextBlockFontFamily(editor: EditorType, { newFontFamily }: { newF
 }
 
 function changeTextBlockFontSize(editor: EditorType, { newFontSize }: { newFontSize: number }): EditorType {
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
     if (currentSlide == null) {
         return editor
     }
@@ -604,7 +643,7 @@ function changeTextBlockFontSize(editor: EditorType, { newFontSize }: { newFontS
         ...editor.presentation,
         listSlides: new Map(editor.presentation.listSlides)
     }
-    newPresentation.listSlides.set(editor.selectedSlideId, newCurrentSlide)
+    newPresentation.listSlides.set(editor.selectedSlideIds[0], newCurrentSlide)
 
     return {
         ...editor,
@@ -613,11 +652,11 @@ function changeTextBlockFontSize(editor: EditorType, { newFontSize }: { newFontS
 }
 
 function changeTextBlockFontColor(editor: EditorType, { newFontColor }: { newFontColor: string }): EditorType {
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
     if (currentSlide == null) {
         return editor
     }
@@ -644,7 +683,7 @@ function changeTextBlockFontColor(editor: EditorType, { newFontColor }: { newFon
         ...editor.presentation,
         listSlides: new Map(editor.presentation.listSlides)
     }
-    newPresentation.listSlides.set(editor.selectedSlideId, newCurrentSlide)
+    newPresentation.listSlides.set(editor.selectedSlideIds[0], newCurrentSlide)
 
     return {
         ...editor,
@@ -653,11 +692,11 @@ function changeTextBlockFontColor(editor: EditorType, { newFontColor }: { newFon
 }
 
 function changeTextBlockFontWeight(editor: EditorType, { newFontWeight }: { newFontWeight: number }): EditorType {
-    if (editor.selectedSlideId == null) {
+    if (editor.selectedSlideIds[0] == null) {
         return editor
     }
 
-    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideId)
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
     if (currentSlide == null) {
         return editor
     }
@@ -684,7 +723,44 @@ function changeTextBlockFontWeight(editor: EditorType, { newFontWeight }: { newF
         ...editor.presentation,
         listSlides: new Map(editor.presentation.listSlides)
     }
-    newPresentation.listSlides.set(editor.selectedSlideId, newCurrentSlide)
+    newPresentation.listSlides.set(editor.selectedSlideIds[0], newCurrentSlide)
+
+    return {
+        ...editor,
+        presentation: newPresentation
+    }
+}
+
+function changeTextAlignment(editor: EditorType, { newTextAlignment }: { newTextAlignment: TextAlignment }): EditorType {
+    if (editor.selectedSlideIds[0] == null) {
+        return editor
+    }
+
+    const currentSlide = editor.presentation.listSlides.get(editor.selectedSlideIds[0])
+    if (currentSlide == null) {
+        return editor
+    }
+
+    const updatedBlocks = currentSlide.blocks.map(block => {
+        if (editor.selectedBlockIds.includes(block.id) && block.type == 'text_block') {
+            return {
+                ...block,
+                textAlignment: newTextAlignment
+            }
+        }
+        return block
+    })
+
+    const newCurrentSlide = {
+        ...currentSlide,
+        blocks: updatedBlocks
+    }
+
+    const newPresentation = {
+        ...editor.presentation,
+        listSlides: new Map(editor.presentation.listSlides)
+    }
+    newPresentation.listSlides.set(editor.selectedSlideIds[0], newCurrentSlide)
 
     return {
         ...editor,
@@ -709,11 +785,13 @@ export {
     replaceImage,
     changeBlockPosition,
     resizeBlock,
+    setRotationToBlock,
     setOpacityToBlock,
     changeTextBlockFontFamily,
     changeTextBlockFontSize,
     changeTextBlockFontColor,
     changeTextBlockFontWeight,
+    changeTextAlignment,
     raiseOverlayPriority,
     lowerOverlayPriority,
 }
